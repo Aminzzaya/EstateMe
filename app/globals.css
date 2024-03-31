@@ -2,21 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 }
 
+* > * {
+  font-family: "Montserrat" !important;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background-start-rgb: 255, 255, 255;
+    --background-end-rgb: 255, 255, 255;
   }
 }
 
 body {
+  height: 100%;
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -26,8 +32,37 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+html, body {
+  height: 100%; 
+  margin: 0; 
+  padding: 0; 
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+body p {
+  color: black;
+  font-size: 14px;
+}
+
+.background {
+  background-image: url("/images/loginbg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100%;
+}
+
+.ant-form-item .ant-form-item-label >label {
+  color: white;
+}
+
+.ant-btn-default:hover {
+  background: #4882DB !important;
+  color: white !important;
+  border-color: white !important;
 }
