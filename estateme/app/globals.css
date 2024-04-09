@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -32,10 +31,11 @@ body {
     rgb(var(--background-start-rgb));
 }
 
-html, body {
-  height: 100%; 
-  margin: 0; 
-  padding: 0; 
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 @layer utilities {
@@ -44,25 +44,36 @@ html, body {
   }
 }
 
-body p {
+body p,
+div {
   color: black;
   font-size: 14px;
 }
 
 .background {
-  background-image: url("/images/loginbg.jpg");
+  background-image: url("/images/loginbg.jpeg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   height: 100%;
 }
 
-.ant-form-item .ant-form-item-label >label {
+.signin .ant-form-item .ant-form-item-label > label {
   color: white;
 }
 
 .ant-btn-default:hover {
-  background: #4882DB !important;
+  background: #4882db !important;
   color: white !important;
   border-color: white !important;
+}
+
+.sidebar {
+  border-right: 1.2px solid #008cc7;
+}
+
+.page-content {
+  border: 1px solid #008cc7;
+  width: 100%;
+  border-radius: 10px;
 }

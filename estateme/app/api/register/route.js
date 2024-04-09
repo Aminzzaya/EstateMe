@@ -4,8 +4,15 @@ import Employees from "@/model/employees";
 
 export async function POST(req) {
   try {
-    const { employeeId, employeeType, password, firstName, email } =
-      await req.json();
+    const {
+      employeeId,
+      employeeType,
+      password,
+      firstName,
+      email,
+      lastName,
+      phoneNumber,
+    } = await req.json();
 
     await connectMongo();
     await Employees.create({
@@ -13,6 +20,8 @@ export async function POST(req) {
       employeeType,
       password,
       firstName,
+      lastName,
+      phoneNumber,
       email,
     });
 

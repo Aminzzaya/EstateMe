@@ -26,26 +26,26 @@ export default function Home() {
           duration: 1.5,
         });
       } else {
-        router.push("/dashboard");
+        router.push("/app/dashboard");
         console.log("Амжилттай нэвтэрлээ!");
       }
     } catch (error) {
       console.error("Алдаа:", error);
     }
   };
-
   return (
     <main className="flex flex-col items-center justify-between p-24 background">
       <div className="text-center bg-transparent backdrop-blur px-24 rounded-3xl mt-8">
-        <div className="flex justify-center items-center pt-8">
+        <div className="flex justify-center items-center pt-11">
           <img
             src="/images/logo.png"
             width="150px"
             className="text-center"
           ></img>
         </div>
-        <p className="pt-6 text-white text-xl">Нэвтрэх</p>
-        <div className="pt-4">
+        {/* <img src="/icons/property.svg" style={{ fill: "blue" }}></img> */}
+        {/* <p className="pt-6 text-white text-[15px] font-bold">Нэвтрэх</p> */}
+        <div className="pt-12 signin">
           <Form
             layout={"vertical"}
             style={{
@@ -84,7 +84,7 @@ export default function Home() {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </Form.Item>
-            <Form.Item className="flex justify-center py-5">
+            <Form.Item className="flex justify-center py-5 pb-8">
               <Button
                 htmlType="submit"
                 className="text-[#4882DB] border-[#4882DB] bg-white w-40"
