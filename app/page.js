@@ -37,58 +37,65 @@ export default function Home() {
   return (
     <main className="flex flex-col items-center justify-between p-24 background">
       <div className="text-center bg-transparent backdrop-blur px-24 rounded-3xl mt-8">
-      <div className="flex justify-center items-center pt-8">
-        <img src="/images/logo.png" width="150px" className="text-center"></img>
-      </div>
-      <p className="pt-6 text-white text-xl">Нэвтрэх</p>
-      <div className="pt-4">
-        <Form
-          layout={"vertical"}
-          style={{
-            width: 320,
-          }}
-          onFinish={handleSubmit}
-          autoComplete="off"
-        >
-          <Form.Item
-            label="Ажилтны код"
-            name="employeeId"
-            rules={[
-              {
-                required: true,
-                message: "Ажилтны кодоо оруулна уу!",
-              },
-            ]}
+        <div className="flex justify-center items-center pt-8">
+          <img
+            src="/images/logo.png"
+            width="150px"
+            className="text-center"
+          ></img>
+        </div>
+        <p className="pt-6 text-white text-xl">Нэвтрэх</p>
+        <div className="pt-4">
+          <Form
+            layout={"vertical"}
+            style={{
+              width: 320,
+            }}
+            onFinish={handleSubmit}
+            autoComplete="off"
           >
-            <Input placeholder="Ажилтны нэвтрэх код"
-              onChange={(e) => setEmployeeId(e.target.value.toUpperCase())}
-            />
-          </Form.Item>
-          <Form.Item
-            label="Нууц үг"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Нууц үгээ оруулна уу!",
-              },
-            ]}
-          >
-            <Input.Password placeholder="Нууц үг" onChange={(e) => setPassword(e.target.value)} />
-          </Form.Item>
-          <Form.Item className="flex justify-center py-5">
-            <Button
-              htmlType="submit"
-              className="text-[#4882DB] border-[#4882DB] bg-white w-40"
+            <Form.Item
+              label="Ажилтны код"
+              name="employeeId"
+              rules={[
+                {
+                  required: true,
+                  message: "Ажилтны кодоо оруулна уу!",
+                },
+              ]}
             >
-              Нэвтрэх
-            </Button>
-          </Form.Item>
-        </Form>
-      </div>
+              <Input
+                placeholder="Ажилтны нэвтрэх код"
+                onChange={(e) => setEmployeeId(e.target.value.toUpperCase())}
+              />
+            </Form.Item>
+            <Form.Item
+              label="Нууц үг"
+              name="password"
+              rules={[
+                {
+                  required: true,
+                  message: "Нууц үгээ оруулна уу!",
+                },
+              ]}
+            >
+              <Input.Password
+                placeholder="Нууц үг"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Item>
+            <Form.Item className="flex justify-center py-5">
+              <Button
+                htmlType="submit"
+                className="text-[#4882DB] border-[#4882DB] bg-white w-40"
+              >
+                Нэвтрэх
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
       </div>
       {error && <p className="text-red-500">{error}</p>}
     </main>
   );
 }
-
