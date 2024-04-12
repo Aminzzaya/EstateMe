@@ -71,7 +71,12 @@ export default function Sidebar() {
             <img src="/images/logoblue.png" width="160px" alt="Logo"></img>
           </div>
           <div className="flex justify-center pt-10">
-            <div className="bg-[#008cc7] rounded-full w-28 h-28"></div>
+            <div className="rounded-full w-28 h-28">
+              <img
+                src={user.profilePicture || "/images/profile.png"}
+                className="profile w-28 h-28"
+              />
+            </div>
           </div>
           <div className="pt-6">
             <p className="text-[#008cc7]">Тавтай морил</p>
@@ -136,11 +141,11 @@ export default function Sidebar() {
               <>
                 <div
                   className={`flex items-center gap-4 cursor-pointer ${
-                    pathname === "/app/corporate"
+                    pathname === "/app/employees"
                       ? "text-[#008cc7] font-semibold"
                       : "text-[#6f6f6f]"
                   }`}
-                  onClick={() => router.push("/app/settings")}
+                  onClick={() => router.push("/app/employees")}
                 >
                   <LaptopIcon />
                   Байгууллага

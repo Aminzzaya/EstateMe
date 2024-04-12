@@ -22,7 +22,7 @@ export async function POST(req) {
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error fetching user:", error);
+    console.error("Алдаа:", error);
     return NextResponse.json(
       { message: "Хэрэглэгчийн мэдээлэл буцаахад алдаа гарлаа." },
       { status: 500 }
