@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const propertyStatusSchema = new Schema(
   {
     statusId: {
-      type: String,
+      type: Number,
       required: true,
     },
     statusName: {

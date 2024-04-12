@@ -9,7 +9,7 @@ const propertySchema = new Schema(
       required: true,
     },
     employeeId: {
-      type: String,
+      type: Number,
       required: true,
     },
     registrationDate: {
@@ -17,15 +17,15 @@ const propertySchema = new Schema(
         required: true,
     },
     typeId: {
-        type: String,
+        type: Number,
         required: true,
     },
     statusId: {
-        type: String,
+        type: Number,
         required: true,
     },
     ownerId: {
-        type: String,
+        type: Number,
         required: true,
     },
     certificate: {
@@ -37,7 +37,7 @@ const propertySchema = new Schema(
         required: true,
     },
     locationId: {
-        type: String,
+        type: Number,
         required: true,
     },
     buildingName: {
@@ -69,7 +69,7 @@ const propertySchema = new Schema(
         type: Date,
     },
     currencyId: {
-        type: String,
+        type: Number,
         required: true,
     },
     currencyRate: {

@@ -5,11 +5,11 @@ const Schema = mongoose.Schema;
 const districtSchema = new Schema(
   {
     cityId: {
-        type: String,
+        type: Number,
         required: true,
     },
     districtId: {
-        type: String,
+        type: Number,
         required: true,
     },
     districtName: {

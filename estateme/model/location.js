@@ -5,23 +5,23 @@ const Schema = mongoose.Schema;
 const locationSchema = new Schema(
   {
     locationId: {
-      type: String,
+      type: Number,
       required: true,
     },
     regionId: {
-        type: String,
+        type: Number,
         required: true,
     },
     cityId: {
-        type: String,
+        type: Number,
         required: true,
     },
     districtId: {
-        type: String,
+        type: Number,
         required: true,
     },
     streetId: {
-        type: String,
+        type: Number,
         required: true,
     },        
 }

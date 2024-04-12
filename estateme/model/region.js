@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const regionSchema = new Schema(
   {
     regionId: {
-        type: String,
+        type: Number,
         required: true,
     },
     regionName: {

@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const propertyTypeSchema = new Schema(
   {
     typeId: {
-      type: String,
+      type: Number,
       required: true,
     },
     typeName: {

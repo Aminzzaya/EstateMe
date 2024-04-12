@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const currencySchema = new Schema(
   {
     currencyId: {
-      type: String,
+      type: Number,
       required: true,
     },
     currencyName: {
