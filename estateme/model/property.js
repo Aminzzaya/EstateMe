@@ -9,7 +9,7 @@ const propertySchema = new Schema(
       required: true,
     },
     employeeId: {
-      type: Number,
+      type: String,
       required: true,
     },
     registrationDate: {
