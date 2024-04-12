@@ -328,7 +328,7 @@ export default function Dashboard() {
               >
                 <Select placeholder="Сонгох">
                   <Option value="2">Менежер</Option>
-                  <Option value="3">Мэргэжилтэн</Option>
+                  <Option value="3">Агент</Option>
                 </Select>
               </Form.Item>
             </div>
