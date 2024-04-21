@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Form, Input, Button, message } from "antd";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -47,7 +47,7 @@ export default function Home() {
         {/* <p className="pt-6 text-white text-[15px] font-bold">Нэвтрэх</p> */}
         <div className="pt-12 signin">
           <Form
-            layout={"vertical"}
+            layout="vertical"
             style={{
               width: 320,
             }}
@@ -95,6 +95,9 @@ export default function Home() {
           </Form>
         </div>
       </div>
+      {/* <div onClick={() => signOut()}>
+        <p>ГАРИЙЙЛДААА</p>
+      </div> */}
       {error && <p className="text-red-500">{error}</p>}
     </main>
   );

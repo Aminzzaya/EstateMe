@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.6",
     "antd": "^5.16.1",
+    "cloudinary": "^2.1.0",
+    "dayjs": "^1.11.10",
     "mongodb": "^6.5.0",
     "mongoose": "^8.3.1",
     "next": "^14.1.4",

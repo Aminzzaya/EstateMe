@@ -9,9 +9,7 @@ export default function Dashboard() {
   return (
     <main className="px-12 py-8">
       <div className="pt-6 pb-4 flex justify-between">
-        <p className="font-semibold text-[15px] text-[#008cc7]">
-          ПРОЦЕСС ЯВАГДАЖ БАЙГАА ЗУУЧЛАЛУУД
-        </p>
+        <p className="font-semibold text-[15px] text-[#008cc7]">ТАЙЛАН</p>
         <div className="flex gap-3">
           <div className="w-8 h-8 p-[5px] bg-[#008cc7] text-white rounded-lg">
             <SearchIcon />

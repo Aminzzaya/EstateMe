@@ -8,7 +8,37 @@ export async function POST(req) {
 
     await connectMongo();
 
-    const user = await Employees.findOne({ email });
+    const user = await Employees.aggregate([
+      {
+        $match: {
+          email,
+        },
+      },
+      {
+        $lookup: {
+          from: "employeeType",
+          localField: "employeeType",
+          foreignField: "employeeType",
+          as: "employeeTypeName",
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          employeeTypeName: "$employeeTypeName.employeeTypeName",
+          firstName: 1,
+          lastName: 1,
+          phoneNumber: 1,
+          profilePicture: 1,
+          email: 1,
+          status: 1,
+          employeeType: 1,
+          employeeId: 1,
+          password: 1,
+        },
+      },
+      { $unwind: "$employeeTypeName" },
+    ]);
 
     if (!user) {
       return NextResponse.json(

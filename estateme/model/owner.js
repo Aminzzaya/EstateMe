@@ -21,12 +21,12 @@ const ownerSchema = new Schema(
       required: true,
     },
     registerNumber: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     gender: {
-        type: Number,
-        required: true,
+      type: String,
+      required: true,
     },
     email: {
       type: String,
@@ -36,7 +36,6 @@ const ownerSchema = new Schema(
   { timestamps: true }
 );
 
-const Owner =
-  mongoose.models.Owner || mongoose.model("Owner", ownerSchema);
+const Owner = mongoose.models.Owner || mongoose.model("Owner", ownerSchema);
 
 export default Owner;

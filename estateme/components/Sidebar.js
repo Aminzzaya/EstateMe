@@ -42,8 +42,9 @@ export default function Sidebar() {
       if (response.ok) {
         const data = await response.json();
         if (data.user) {
-          setUser(data.user);
-          setEmployeeType(data.user.employeeType);
+          setUser(data.user[0]);
+          localStorage.setItem("user", JSON.stringify(data.user[0]));
+          setEmployeeType(data.user[0].employeeType);
         } else {
           console.error("Хэрэглэгчийн дата олдсонгүй:", data.message);
         }
@@ -98,7 +99,7 @@ export default function Sidebar() {
               <DashboardIcon />
               Хяналтын самбар
             </div>
-            {employeeType == 2 ? (
+            {employeeType == 2 || employeeType == 1 ? (
               <></>
             ) : (
               <>
@@ -113,17 +114,6 @@ export default function Sidebar() {
                   <PropertyIcon />
                   Бүртгэл
                 </div>
-                <div
-                  className={`flex items-center gap-4 cursor-pointer ${
-                    pathname === "/app/user"
-                      ? "text-[#008cc7] font-semibold"
-                      : "text-[#6f6f6f]"
-                  }`}
-                  onClick={() => router.push("/app/settings")}
-                >
-                  <UserIcon />
-                  Хэрэглэгч
-                </div>
               </>
             )}
             <div
@@ -132,12 +122,12 @@ export default function Sidebar() {
                   ? "text-[#008cc7] font-semibold"
                   : "text-[#6f6f6f]"
               }`}
-              onClick={() => router.push("/app/settings")}
+              onClick={() => router.push("/app/reports")}
             >
               <ReportIcon />
               Тайлан
             </div>
-            {employeeType == 1 && (
+            {employeeType == 9 && (
               <>
                 <div
                   className={`flex items-center gap-4 cursor-pointer ${
@@ -147,8 +137,8 @@ export default function Sidebar() {
                   }`}
                   onClick={() => router.push("/app/employees")}
                 >
-                  <LaptopIcon />
-                  Байгууллага
+                  <UserIcon />
+                  Хэрэглэгч
                 </div>
                 <div
                   className={`flex items-center gap-4 cursor-pointer ${

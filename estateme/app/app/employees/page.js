@@ -8,9 +8,11 @@ import { PencilIcon, LaptopIcon } from "@/components/Icons";
 export default function Dashboard() {
   const { Option } = Select;
   const [form] = Form.useForm();
+  const [createform] = Form.useForm();
 
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [profilePreview, setProfilePreview] = useState(null);
@@ -71,9 +73,35 @@ export default function Dashboard() {
   };
 
   const handleSubmit = async (values) => {
+    setLoading(true);
     const { password, lastName, firstName, email, phoneNumber, employeeType } =
       values;
     try {
+      let pictureUrl = profilePreview;
+
+      if (profilePicture) {
+        const formData = new FormData();
+        formData.append("file", profilePicture);
+        formData.append("upload_preset", "ml_default");
+
+        const cloudinaryResponse = await fetch(
+          "https://api.cloudinary.com/v1_1/estateme/image/upload",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!cloudinaryResponse.ok) {
+          console.error("Failed to upload image to Cloudinary");
+          return;
+        }
+
+        const cloudinaryData = await cloudinaryResponse.json();
+        console.log("Cloudinary Data:", cloudinaryData);
+        pictureUrl = cloudinaryData.secure_url;
+      }
+
       const response = await fetch("/api/register", {
         method: "POST",
         headers: {
@@ -88,7 +116,7 @@ export default function Dashboard() {
           phoneNumber,
           employeeType,
           status,
-          profilePicture,
+          profilePicture: pictureUrl,
         }),
       });
 
@@ -101,6 +129,10 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error("Алдаа: Хэрэглэгчийн мэдээлэл BE:", error);
+    } finally {
+      setLoading(false);
+      createform.resetFields();
+      setProfilePreview(null);
     }
   };
 
@@ -110,7 +142,7 @@ export default function Dashboard() {
   };
 
   const handleEditSubmit = async (values) => {
-    const { status, email, phoneNumber, employeeType } = values;
+    const { status, email, phoneNumber, employeeTypeName } = values;
     try {
       const response = await fetch("/api/updateUserStatus", {
         method: "POST",
@@ -121,7 +153,7 @@ export default function Dashboard() {
           employeeId: selectedEmployee.employeeId,
           email,
           phoneNumber,
-          employeeType,
+          employeeType: employeeTypeName,
           status,
         }),
       });
@@ -180,20 +212,18 @@ export default function Dashboard() {
             <div key={employee.employeeId} className="col-span-12">
               <div className="grid grid-cols-12 gap-8 items-center px-6 pb-3">
                 <div className="col-span-2 flex items-center">
-                  <div className="w-[35px] h-[35px]">
-                    <img
-                      src={employee.profilePicture || "/images/profile.png"}
-                      alt="Agent"
-                      className="profile w-[35px] h-[35px]"
-                    />
-                  </div>
+                  <img
+                    src={employee.profilePicture || "/images/profile.png"}
+                    alt="Agent"
+                    className="profile w-9 h-9"
+                  />
 
                   <p className="pl-4">
                     {employee.firstName} {employee.lastName.slice(0, 1)}.
                   </p>
                 </div>
                 <div className="col-span-2">
-                  <p>{employee.employeeType}</p>
+                  <p>{employee.employeeTypeName}</p>
                 </div>
                 <div className="col-span-3">
                   <p className="text-center">{employee.email}</p>
@@ -249,6 +279,7 @@ export default function Dashboard() {
         </div>
 
         <Form
+          form={createform}
           className="pt-4"
           layout={"vertical"}
           onFinish={handleSubmit}
@@ -310,7 +341,7 @@ export default function Dashboard() {
                   },
                 ]}
               >
-                <Input />
+                <Input maxLength={8} />
               </Form.Item>
             </div>
           </div>
@@ -327,6 +358,7 @@ export default function Dashboard() {
                 ]}
               >
                 <Select placeholder="Сонгох">
+                  <Option value="1">Хэлтсийн захирал</Option>
                   <Option value="2">Менежер</Option>
                   <Option value="3">Агент</Option>
                 </Select>
@@ -351,6 +383,7 @@ export default function Dashboard() {
             <Form.Item>
               <Button onClick={() => setRegisterModalOpen(false)}>Буцах</Button>
               <Button
+                loading={loading}
                 className="border-white bg-green-600 text-white ml-2"
                 htmlType="submit"
               >
@@ -385,7 +418,7 @@ export default function Dashboard() {
             </div>
 
             <p className="mt-2 text-center px-2 rounded-lg py-1 bg-[#008cc7] text-white">
-              {selectedEmployee.employeeType}
+              {selectedEmployee.employeeTypeName}
             </p>
           </div>
 
@@ -420,8 +453,9 @@ export default function Dashboard() {
             </div>
             <div className="flex flex-wrap">
               <div className="w-1/2 px-2">
-                <Form.Item label="Албан тушаал" name="employeeType">
+                <Form.Item label="Албан тушаал" name="employeeTypeName">
                   <Select placeholder="Сонгох">
+                    <Option value="1">Хэлтсийн захирал</Option>
                     <Option value="2">Менежер</Option>
                     <Option value="3">Мэргэжилтэн</Option>
                   </Select>
