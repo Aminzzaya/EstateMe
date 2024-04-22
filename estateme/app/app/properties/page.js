@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Modal, Select, message } from "antd";
-import { PencilIcon, BellIcon, SearchIcon } from "@/components/Icons";
+import { Form, Carousel, Button, Modal, Select, message, Table } from "antd";
+import { PencilIcon, BellIcon, SearchIcon, MapIcon } from "@/components/Icons";
 import { useRouter } from "next/navigation";
 
 export default function Dashboard() {
@@ -12,124 +12,213 @@ export default function Dashboard() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-  const [employees, setEmployees] = useState([]);
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [propertyModalOpen, setPropertyModalOpen] = useState(false);
+  const [properties, setProperties] = useState([]);
 
   useEffect(() => {
-    getUsers();
+    getProperties();
   }, []);
 
-  const getUsers = async () => {
+  const getProperties = async () => {
     try {
-      const response = await fetch("/api/getUsers");
+      const response = await fetch("/api/getProperties");
       if (response.ok) {
         const data = await response.json();
-        setEmployees(data.employees);
-        const maxEmployeeId = findMaxEmployeeId(data.employees);
-        const nextEmployeeId = getNextEmployeeId(maxEmployeeId);
-        setEmployeeId(nextEmployeeId);
+        setProperties(data.properties);
       } else {
-        console.error("Алдаа: Хэрэглэгчийн мэдээлэл FE:", response.statusText);
+        console.error(
+          "Алдаа: Үл хөдлөх хөрөнгийн мэдээлэл FE:",
+          response.statusText
+        );
       }
     } catch (error) {
-      console.error("Алдаа: Хэрэглэгчийн мэдээлэл BE:", error);
+      console.error("Алдаа: Үл хөдлөх хөрөнгийн мэдээлэл BE:", error);
     }
+  };
+
+  const getNextPropertyId = () => {
+    const maxNumber = properties.reduce((max, property) => {
+      const number = parseInt(property.propertyId.substring(2), 10);
+      return isNaN(number) ? max : Math.max(max, number);
+    }, 0);
+    const nextNumber = maxNumber + 1;
+    return `PR${nextNumber.toString().padStart(4, "0")}`;
+  };
+
+  const handleNewProperty = () => {
+    const newPropertyId = getNextPropertyId();
+    localStorage.setItem("propertyId", newPropertyId);
+    router.push("properties/new");
+  };
+
+  const getStatusColor = (statusName) => {
+    switch (statusName) {
+      case "Бүртгэгдсэн":
+        return "bg-blue-500 text-white px-2 py-1 rounded-xl";
+      case "Гэрээ хийгдэж байгаа":
+        return "bg-green-500 text-white px-2 py-1 rounded-xl";
+      default:
+        return "";
+    }
+  };
+
+  const columns = [
+    {
+      title: "ҮХХ-ийн дугаар",
+      dataIndex: "propertyId",
+      defaultSortOrder: "descend",
+      sorter: (a, b) => {
+        const idA = parseInt(a.propertyId.substr(2), 10);
+        const idB = parseInt(b.propertyId.substr(2), 10);
+        return idA - idB;
+      },
+    },
+    {
+      title: "Бүртгэлийн огноо",
+      dataIndex: "createdAt",
+      render: (createdAt) => new Date(createdAt).toISOString().split("T")[0],
+      sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
+    },
+    {
+      title: "Байршил",
+      dataIndex: "address",
+      sorter: (a, b) => b.districtId - a.districtId,
+    },
+    {
+      title: "Төрөл",
+      dataIndex: "typeName",
+      sorter: (a, b) => a.typeId - b.typeId,
+    },
+    {
+      title: "Агент",
+      dataIndex: "employee",
+      sorter: (a, b) => {
+        const idA = parseInt(a.employeeId.substr(1), 10);
+        const idB = parseInt(b.employeeId.substr(1), 10);
+        return idA - idB;
+      },
+    },
+    {
+      title: "Үнэ",
+      dataIndex: "totalAvgPrice",
+      render: (totalAvgPrice) => (
+        <>
+          {new Intl.NumberFormat("en-US").format(totalAvgPrice)}
+          <span>₮</span>
+        </>
+      ),
+      sorter: (a, b) => a.totalAvgPrice - b.totalAvgPrice,
+    },
+    {
+      title: "Төлөв",
+      dataIndex: "statusName",
+      sorter: (a, b) => a.statusId - b.statusId,
+      render: (statusName) => (
+        <div className={`status-cell ${getStatusColor(statusName)}`}>
+          {statusName}
+        </div>
+      ),
+    },
+    {
+      title: "",
+      render: (property) => (
+        <Button
+          type="link"
+          onClick={() => {
+            setSelectedProperty(property);
+            setPropertyModalOpen(true);
+          }}
+        >
+          <PencilIcon />
+        </Button>
+      ),
+    },
+  ];
+
+  const customLocale = {
+    triggerAsc: "Багаас нь их рүү ангилах",
+    triggerDesc: "Ихээс нь бага руу ангилах",
+    cancelSort: "Ангилсныг арилгах",
   };
 
   return (
     <main className="px-12 py-8">
-      <div className="pt-6 pb-4 flex justify-between">
-        <p className="font-semibold text-[15px] text-[#008cc7]">БҮРТГЭЛ</p>
-        <div className="flex gap-3">
-          <div className="w-8 h-8 p-[5px] bg-[#008cc7] text-white rounded-lg">
-            <SearchIcon />
-          </div>
-          <div className="w-8 h-8 p-[5px] bg-[#008cc7] text-white rounded-lg">
-            <BellIcon />
-          </div>
-        </div>
-      </div>
-      <div>
-        <div>
-          <Button
-            className="border-[#008cc7] text-[#008cc7]"
-            onClick={() => router.push("properties/new")}
-          >
-            + Үл хөдлөх хөрөнгө бүртгэх
-          </Button>
-        </div>
-      </div>
-      <div className="pt-6"></div>
-      <div className="page-content pt-6 pb-1">
-        <div className="grid grid-cols-12 gap-8 px-6">
-          <div className="col-span-2">
-            <p className="font-medium">Овог, нэр</p>
-          </div>
-          <div className="col-span-2">
-            <p className="font-medium">Албан тушаал</p>
-          </div>
-          <div className="col-span-3">
-            <p className="font-medium text-center">И-мейл</p>
-          </div>
-          <div className="col-span-2">
-            <p className="font-medium text-center">Утасны дугаар</p>
-          </div>
-          <div className="col-span-2">
-            <p className="font-medium text-center">Төлөв</p>
-          </div>
-          <div className="col-span-1">
-            <p className="font-medium text-center"></p>
-          </div>
-        </div>
-        <div className="border-b border-1 pt-4"></div>
-        <div className="grid grid-cols-12 gap-4 pt-4 items-center">
-          {employees.map((employee, index) => (
-            <div key={employee.employeeId} className="col-span-12">
-              <div className="grid grid-cols-12 gap-8 items-center px-6 pb-3">
-                <div className="col-span-2 flex items-center">
-                  <img
-                    src={employee.profilePicture || "/images/profile.png"}
-                    alt="Agent"
-                    className="profile w-9 h-9"
-                  />
-
-                  <p className="pl-4">
-                    {employee.firstName} {employee.lastName.slice(0, 1)}.
-                  </p>
-                </div>
-                <div className="col-span-2">
-                  <p>{employee.employeeTypeName}</p>
-                </div>
-                <div className="col-span-3">
-                  <p className="text-center">{employee.email}</p>
-                </div>
-                <div className="col-span-2">
-                  <p className="text-center">{employee.phoneNumber}</p>
-                </div>
-                <div className="flex justify-center col-span-2">
-                  <p
-                    className={`p-1 px-3 rounded-lg text-center ${
-                      employee.status === "Идэвхтэй"
-                        ? "bg-[#008cc7] text-white"
-                        : "bg-gray-100"
-                    }`}
-                  >
-                    {employee.status}
-                  </p>
-                </div>
-                <div
-                  className="flex justify-center col-span-1 text-[#008cc7] bg-gray-100 rounded-lg py-1 cursor-pointer"
-                  onClick={() => handleEdit(employee)}
-                >
-                  <PencilIcon />
-                </div>
-              </div>
-              {index !== employees.length - 1 && (
-                <div className="border-b border-1"></div>
-              )}
+      <>
+        <div className="pt-6 pb-4 flex justify-between">
+          <p className="font-semibold text-[15px] text-[#008cc7]">БҮРТГЭЛ</p>
+          <div className="flex gap-3">
+            <div className="w-8 h-8 p-[5px] bg-[#008cc7] text-white rounded-lg">
+              <SearchIcon />
             </div>
-          ))}
+            <div className="w-8 h-8 p-[5px] bg-[#008cc7] text-white rounded-lg">
+              <BellIcon />
+            </div>
+          </div>
         </div>
-      </div>
+        <div>
+          <div>
+            <Button
+              className="border-[#008cc7] text-[#008cc7]"
+              onClick={handleNewProperty}
+            >
+              + Үл хөдлөх хөрөнгө бүртгэх
+            </Button>
+          </div>
+        </div>
+        <div className="pt-6"></div>
+        <Table
+          columns={columns}
+          locale={customLocale}
+          dataSource={properties.map((property, index) => ({
+            ...property,
+            key: index,
+          }))}
+        />
+      </>
+      {propertyModalOpen && selectedProperty && (
+        <Modal
+          title={`ҮХХ-ийн мэдээлэл / ${selectedProperty.propertyId}`}
+          open={propertyModalOpen}
+          onCancel={() => setPropertyModalOpen(false)}
+          width={600}
+          footer={null}
+        >
+          <div>
+            <div className="pt-4 flex items-center gap-2">
+              <p
+                className={`status-cell ${getStatusColor(
+                  selectedProperty.statusName
+                )}`}
+              >
+                {selectedProperty.statusName}
+              </p>
+              <p>{selectedProperty.typeName}</p>
+            </div>
+            <div className="pt-5 rounded-xl overflow-hidden">
+              <Carousel autoplay autoplaySpeed={2000}>
+                {selectedProperty.pics.map((pic, index) => (
+                  <div key={index}>
+                    <img
+                      src={pic}
+                      alt={`Property Image ${index + 1}`}
+                      className="carousel-img"
+                    />
+                  </div>
+                ))}
+              </Carousel>
+            </div>
+            <div className="pt-4 flex gap-4 items-center">
+              <MapIcon />
+              <div className="leading-4">
+                <p>{selectedProperty.address}</p>
+                <p>Зип код: {selectedProperty.zipCode}</p>
+              </div>
+            </div>
+          </div>
+          <div className="py-6">geh met other info</div>
+        </Modal>
+      )}
     </main>
   );
 }

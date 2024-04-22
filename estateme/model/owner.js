@@ -4,10 +4,6 @@ const Schema = mongoose.Schema;
 
 const ownerSchema = new Schema(
   {
-    ownerId: {
-      type: Number,
-      required: true,
-    },
     firstName: {
       type: String,
       required: true,
@@ -20,7 +16,7 @@ const ownerSchema = new Schema(
       type: Number,
       required: true,
     },
-    registerNumber: {
+    ownerRegNo: {
       type: String,
       required: true,
     },

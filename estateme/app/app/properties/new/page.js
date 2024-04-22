@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Form,
   Input,
@@ -12,6 +12,7 @@ import {
   Steps,
   DatePicker,
   Checkbox,
+  message,
 } from "antd";
 import { BackIcon, SearchIcon } from "@/components/Icons";
 import { useRouter } from "next/navigation";
@@ -26,8 +27,126 @@ export default function Dashboard() {
   const date = today.format("YYYY-MM-DD");
 
   const [current, setCurrent] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [employee, setEmployee] = useState([]);
+  const [ownerRegNo, setOwnerRegNo] = useState(null);
+  const [ownerExists, setOwnerExists] = useState(false);
+  const [type, setType] = useState(0);
+  const [propertyId, setPropertyId] = useState(0);
+  const [cities, setCities] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [streets, setStreets] = useState([]);
+  const [certificate, setCertificate] = useState([]);
   const [selectedImages, setSelectedImages] = useState([]);
   const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    const employee = JSON.parse(localStorage.getItem("user"));
+    setPropertyId(localStorage.getItem("propertyId"));
+    if (employee) {
+      setEmployee(employee);
+    }
+    getCities();
+  }, []);
+
+  const getCities = async () => {
+    try {
+      const response = await fetch("/api/getCities");
+      if (response.ok) {
+        const data = await response.json();
+        setCities(data.cities);
+      } else {
+        console.error("Алдаа: Хотын мэдээлэл FE:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Алдаа: Хотын мэдээлэл BE:", error);
+    }
+  };
+
+  const handleCitySelect = (value) => {
+    getDistrict(value);
+  };
+
+  const getDistrict = async (cityId) => {
+    try {
+      const response = await fetch("/api/getDistrict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cityId }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setDistricts(data.district);
+      } else {
+        console.error("Алдаа: Дүүргийн мэдээлэл FE:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Алдаа: Дүүргийн мэдээлэл BE:", error);
+    }
+  };
+
+  const handleDistrictSelect = (value) => {
+    getStreet(value);
+  };
+
+  const getStreet = async (districtId) => {
+    try {
+      const response = await fetch("/api/getStreet", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ districtId }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setStreets(data.street);
+      } else {
+        console.error("Алдаа: Хорооны мэдээлэл FE:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Алдаа: Хорооны мэдээлэл BE:", error);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setOwnerRegNo(e.target.value);
+  };
+
+  const getOwnerInfo = () => {
+    getOwnerByRegNo();
+  };
+
+  const getOwnerByRegNo = async () => {
+    try {
+      const response = await fetch("/api/getOwnerByRegNo", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ownerRegNo }),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        form.setFieldsValue({
+          firstName: data.owner.firstName,
+          lastName: data.owner.lastName,
+          phoneNumber: data.owner.phoneNumber,
+          email: data.owner.email,
+          gender: data.owner.gender,
+        });
+        setOwnerExists(true);
+        message.success("Эзэмшигчийн мэдээлэл олдлоо.");
+      } else {
+        message.warning("Эзэмшигч бүртгэлгүй байна.");
+        setOwnerExists(false);
+      }
+    } catch (error) {
+      console.error("Алдаа: Эзэмшигчийн мэдээлэл BE:", error);
+    }
+  };
 
   const data = [
     {
@@ -70,6 +189,16 @@ export default function Dashboard() {
     },
   ];
 
+  const onTypeSelect = async (values) => {
+    if (values == 4) {
+      setType(1);
+    } else if (values == 5) {
+      setType(1);
+    } else {
+      setType(0);
+    }
+  };
+
   const handleFinish = async (values) => {
     try {
       await form.validateFields();
@@ -79,11 +208,7 @@ export default function Dashboard() {
 
       if (current !== 4) {
         setCurrent(current + 1);
-      } else {
-        console.log("finish");
       }
-
-      console.log("Form values:", newFormData);
     } catch (errorInfo) {
       console.log("Validation failed:", errorInfo);
     }
@@ -137,19 +262,163 @@ export default function Dashboard() {
 
       reader.onloadend = () => {
         newSelectedImages.push(reader.result);
-        setSelectedImages(newSelectedImages.slice(0, 4)); // Limit to 4 images
+        setSelectedImages(newSelectedImages.slice(0, 4));
       };
 
       if (file) {
-        reader.readAsDataURL(file); // Read the image file as a data URL
+        reader.readAsDataURL(file);
       }
     }
+  };
+
+  const onCertificateChange = (event) => {
+    const file = event.target.files[0];
+    setCertificate(file);
   };
 
   const handleRemoveImage = (indexToRemove) => {
     setSelectedImages(
       selectedImages.filter((image, index) => index !== indexToRemove)
     );
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+
+    try {
+      const imageUrls = [];
+
+      for (let i = 0; i < selectedImages.length; i++) {
+        const formData = new FormData();
+        formData.append("file", selectedImages[i]);
+        formData.append("upload_preset", "ml_default");
+
+        const cloudinaryResponse = await fetch(
+          "https://api.cloudinary.com/v1_1/estateme/image/upload",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+
+        if (!cloudinaryResponse.ok) {
+          console.error("Failed to upload image to Cloudinary");
+          return;
+        }
+
+        const cloudinaryData = await cloudinaryResponse.json();
+        const imageUrl = cloudinaryData.secure_url;
+        imageUrls.push(imageUrl);
+      }
+
+      const certificateFormData = new FormData();
+      certificateFormData.append("file", certificate);
+      certificateFormData.append("upload_preset", "ml_default");
+
+      const certificateCloudinaryResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/estateme/image/upload",
+        {
+          method: "POST",
+          body: certificateFormData,
+        }
+      );
+
+      if (!certificateCloudinaryResponse.ok) {
+        console.error("Failed to upload certificate to Cloudinary");
+        return;
+      }
+
+      const certificateCloudinaryData =
+        await certificateCloudinaryResponse.json();
+      const certificateUrl = certificateCloudinaryData.secure_url;
+
+      const response = await fetch("/api/newProperty", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          propertyId: propertyId,
+          employeeId: employee.employeeId,
+          typeId: formData.typeId,
+          statusId: "1",
+          ownerRegNo: formData.registerNumber,
+          certificate: certificateUrl,
+          zipCode: formData.zipCode,
+          regionId: formData.regionId,
+          cityId: formData.cityId,
+          districtId: formData.districtId,
+          streetId: formData.streetId,
+          buildingName: formData.buildingName,
+          buildingTotalFloor: formData.buildingTotalFloor,
+          apartmentFloor: formData.apartmentFloor,
+          buildingMaterial: formData.buildingMaterial,
+          buildingNumOfCCTV: formData.buildingNumOfCCTV,
+          commencementDate: formData.commencementDate,
+          launchDate: formData.launchDate,
+          unitMaxPrice: formData.unitMaxPrice,
+          totalMaxPrice: formData.totalMaxPrice,
+          unitMinPrice: formData.unitMinPrice,
+          totalMinPrice: formData.totalMinPrice,
+          unitAvgPrice: formData.unitAvgPrice,
+          totalAvgPrice: formData.totalAvgPrice,
+          ceilingHeight: formData.ceilingHeight,
+          baseArea: formData.baseArea,
+          numOfRoom: formData.numOfRoom,
+          numOfBedroom: formData.numOfBedroom,
+          numOfBathroom: formData.numOfBathroom,
+          numOfGarage: formData.numOfGarage,
+          garagePrice: formData.garagePrice,
+          numOfEntry: formData.numOfEntry,
+          numOfExit: formData.numOfExit,
+          numOfWindow: formData.numOfWindow,
+          isCentralWaterSupplies: formData.isCentralWaterSupplies,
+          isLobby: formData.isLobby,
+          isAdditionalPowerSupplies: formData.isAdditionalPowerSupplies,
+          isParkingLot: formData.isParkingLot,
+          isEmergencyExit: formData.isEmergencyExit,
+          earthquakeResistance: formData.earthquakeResistance,
+          distanceToDowntown: formData.distanceToDowntown,
+          distanceToSchool: formData.distanceToSchool,
+          distanceToUniversity: formData.distanceToUniversity,
+          distanceToKindergarten: formData.distanceToKindergarten,
+          purpose: formData.purpose,
+          pics: imageUrls,
+          otherInfo: formData.otherInfo,
+        }),
+      });
+
+      if (!ownerExists) {
+        const ownerResponse = await fetch("/api/newOwner", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            phoneNumber: formData.phoneNumber,
+            ownerRegNo: formData.registerNumber,
+            gender: formData.gender,
+            email: formData.email,
+          }),
+        });
+      }
+
+      if (response.ok) {
+        message.success("Амжилттай бүртгэгдлээ.");
+        router.push("/app/properties");
+      } else {
+        console.error(
+          "Алдаа: Үл хөдлөх хөрөнгийн мэдээлэл FE:",
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Алдаа: Үл хөдлөх хөрөнгийн мэдээлэл BE:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -170,7 +439,7 @@ export default function Dashboard() {
         <div>
           <div className="flex gap-12">
             <Form.Item label="№">
-              <div className="pr">PR0001</div>
+              <div className="pr">{propertyId}</div>
             </Form.Item>
             <Form.Item label="Огноо">
               <div className="pr">{date}</div>
@@ -185,8 +454,16 @@ export default function Dashboard() {
                 },
               ]}
             >
-              <Select placeholder="Сонгох" style={{ width: "160px" }}>
+              <Select
+                placeholder="Сонгох"
+                style={{ width: "180px" }}
+                onChange={onTypeSelect}
+              >
                 <Option value="1">Орон сууц</Option>
+                <Option value="2">Амины сууц</Option>
+                <Option value="3">Пентхаус</Option>
+                <Option value="4">Газар</Option>
+                <Option value="5">Зогсоолын талбай</Option>
               </Select>
             </Form.Item>
           </div>
@@ -232,9 +509,12 @@ export default function Dashboard() {
                     },
                   ]}
                 >
-                  <Input maxLength={10} />
+                  <Input maxLength={10} onChange={handleInputChange} />
                 </Form.Item>
-                <Button className="text-white bg-[#008cc7] border-none">
+                <Button
+                  className="text-white bg-[#008cc7] border-none"
+                  onClick={getOwnerInfo}
+                >
                   <SearchIcon />
                 </Button>
               </div>
@@ -355,8 +635,7 @@ export default function Dashboard() {
                     ]}
                   >
                     <Select placeholder="Сонгох">
-                      <Option value="Эрэгтэй">Эрэгтэй</Option>
-                      <Option value="Эмэгтэй">Эмэгтэй</Option>
+                      <Option value="1">Монгол</Option>
                     </Select>
                   </Form.Item>
                 </div>
@@ -383,9 +662,12 @@ export default function Dashboard() {
                       },
                     ]}
                   >
-                    <Select placeholder="Сонгох">
-                      <Option value="Эрэгтэй">Эрэгтэй</Option>
-                      <Option value="Эмэгтэй">Эмэгтэй</Option>
+                    <Select placeholder="Сонгох" onChange={handleCitySelect}>
+                      {cities.map((city) => (
+                        <Option key={city.cityId} value={city.cityId}>
+                          {city.cityName}
+                        </Option>
+                      ))}
                     </Select>
                   </Form.Item>
                 </div>
@@ -412,9 +694,18 @@ export default function Dashboard() {
                       },
                     ]}
                   >
-                    <Select placeholder="Сонгох">
-                      <Option value="Эрэгтэй">Эрэгтэй</Option>
-                      <Option value="Эмэгтэй">Эмэгтэй</Option>
+                    <Select
+                      placeholder="Сонгох"
+                      onChange={handleDistrictSelect}
+                    >
+                      {districts.map((district) => (
+                        <Option
+                          key={district.districtId}
+                          value={district.districtId}
+                        >
+                          {district.districtName}
+                        </Option>
+                      ))}
                     </Select>
                   </Form.Item>
                 </div>
@@ -442,8 +733,11 @@ export default function Dashboard() {
                     ]}
                   >
                     <Select placeholder="Сонгох">
-                      <Option value="Эрэгтэй">Эрэгтэй</Option>
-                      <Option value="Эмэгтэй">Эмэгтэй</Option>
+                      {streets.map((street) => (
+                        <Option key={street.streetId} value={street.streetId}>
+                          {street.streetName}
+                        </Option>
+                      ))}
                     </Select>
                   </Form.Item>
                 </div>
@@ -489,312 +783,384 @@ export default function Dashboard() {
           )}
           {current == 2 && (
             <div className="page-content p-6 px-10 pt-8">
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
+              {type == 0 ? (
+                <>
+                  <div className="grid grid-cols-2 gap-12 pr-14">
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 12 }}
+                        label="Барилгын нэр"
+                        name="buildingName"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Утга оруулна уу!",
+                          },
+                        ]}
+                      >
+                        <Input />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 19 }}
+                        label="Нийт өрөөний тоо"
+                        name="numOfRoom"
+                        rules={[
+                          {
+                            required: true,
+                            message: " ",
+                          },
+                        ]}
+                      >
+                        <InputNumber min={0} placeholder="0" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-12 pr-14">
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 12 }}
+                        wrapperCol={{ span: 2 }}
+                        label="Барилгын нийт давхар"
+                        name="buildingTotalFloor"
+                        rules={[
+                          {
+                            required: true,
+                            message: " ",
+                          },
+                        ]}
+                      >
+                        <InputNumber min={0} />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 19 }}
+                        label="Унтлагын өрөөний тоо"
+                        name="numOfBedroom"
+                        rules={[
+                          {
+                            required: true,
+                            message: " ",
+                          },
+                        ]}
+                      >
+                        <InputNumber min={0} placeholder="0" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-12 pr-14">
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 12 }}
+                        wrapperCol={{ span: 2 }}
+                        label="ҮХХ-ийн давхар"
+                        name="apartmentFloor"
+                        rules={[
+                          {
+                            required: true,
+                            message: " ",
+                          },
+                        ]}
+                      >
+                        <InputNumber min={0} />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 19 }}
+                        label="Угаалгын өрөөний тоо"
+                        name="numOfBathroom"
+                        rules={[
+                          {
+                            required: true,
+                            message: " ",
+                          },
+                        ]}
+                      >
+                        <InputNumber min={0} placeholder="0" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-12 pr-14">
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 12 }}
+                        label="Баригдсан огноо"
+                        name="commencementDate"
+                      >
+                        <DatePicker placeholder="Сонгох" />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 19 }}
+                        label="Цонхны тоо"
+                        name="numOfWindow"
+                        rules={[
+                          {
+                            required: true,
+                            message: " ",
+                          },
+                        ]}
+                      >
+                        <InputNumber min={0} placeholder="0" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-12 pr-14">
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 12 }}
+                        label="Ашиглалтад орсон огноо"
+                        name="launchDate"
+                      >
+                        <DatePicker placeholder="Сонгох" />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 19 }}
+                        label="Орцын тоо"
+                        name="numOfEntry"
+                        rules={[
+                          {
+                            required: true,
+                            message: " ",
+                          },
+                        ]}
+                      >
+                        <InputNumber min={0} placeholder="0" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-12 pr-14">
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 12 }}
+                        label="Барилгын материал"
+                        name="buildingMaterial"
+                      >
+                        <Input />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 19 }}
+                        label="Гарцын тоо"
+                        name="numOfExit"
+                        rules={[
+                          {
+                            required: true,
+                            message: " ",
+                          },
+                        ]}
+                      >
+                        <InputNumber min={0} placeholder="0" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-12 pr-14">
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 12 }}
+                        label="Талбайн хэмжээ"
+                        name="baseArea"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Утга оруулна уу!",
+                          },
+                        ]}
+                      >
+                        <InputNumber min={0} addonAfter="мкв" />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 19 }}
+                        label="Дотор машин зогсоолын тоо"
+                        name="numOfGarage"
+                      >
+                        <InputNumber min={0} placeholder="0" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-12 pr-14">
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 12 }}
+                        label="Таазны өндөр"
+                        name="ceilingHeight"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Утга оруулна уу!",
+                          },
+                        ]}
+                      >
+                        <InputNumber min={0} />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 15 }}
+                        label="Дотор машин зогсоолын үнэ"
+                        name="garagePrice"
+                      >
+                        <InputNumber min={0} placeholder="0" addonAfter="₮" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-12 pr-14">
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 12 }}
+                        label="Барилгын CCTV тоо"
+                        name="buildingNumOfCCTV"
+                      >
+                        <InputNumber min={0} />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 17 }}
+                        label="Газар хөдлөлтийн тэсвэр"
+                        name="earthquakeResistance"
+                      >
+                        <InputNumber min={0} placeholder="0" addonAfter="мт" />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="border-b border-1 mb-6"></div>
+                  <div className="grid grid-cols-2 gap-12 pr-14">
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 20 }}
+                        label="Төвийн шугамд холбогдсон эсэх"
+                        name="isCentralWaterSupplies"
+                        valuePropName="checked"
+                        initialValue={false}
+                      >
+                        <Checkbox />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 15 }}
+                        label="Хүлээлгийн танхимтай эсэх"
+                        name="isLobby"
+                        valuePropName="checked"
+                        initialValue={false}
+                      >
+                        <Checkbox />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-12 pr-14">
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 20 }}
+                        label="Нэмэлт цахилгааны эх үүсвэртэй эсэх"
+                        name="isAdditionalPowerSupplies"
+                        valuePropName="checked"
+                        initialValue={false}
+                      >
+                        <Checkbox />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 15 }}
+                        label="Аваарын гарцтай эсэх"
+                        name="isEmergencyExit"
+                        valuePropName="checked"
+                        initialValue={false}
+                      >
+                        <Checkbox />
+                      </Form.Item>
+                    </div>
+                  </div>
                   <Form.Item
-                    labelCol={{ span: 12 }}
-                    label="Барилгын нэр"
-                    name="buildingName"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Утга оруулна уу!",
-                      },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 19 }}
-                    label="Нийт өрөөний тоо"
-                    name="numOfRoom"
-                    rules={[
-                      {
-                        required: true,
-                        message: " ",
-                      },
-                    ]}
-                  >
-                    <InputNumber min={0} placeholder="0" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 12 }}
-                    wrapperCol={{ span: 2 }}
-                    label="Барилгын нийт давхар"
-                    name="buildingTotalFloor"
-                    rules={[
-                      {
-                        required: true,
-                        message: " ",
-                      },
-                    ]}
-                  >
-                    <InputNumber min={0} />
-                  </Form.Item>
-                </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 19 }}
-                    label="Унтлагын өрөөний тоо"
-                    name="numOfBedroom"
-                    rules={[
-                      {
-                        required: true,
-                        message: " ",
-                      },
-                    ]}
-                  >
-                    <InputNumber min={0} placeholder="0" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 12 }}
-                    wrapperCol={{ span: 2 }}
-                    label="ҮХХ-ийн давхар"
-                    name="apartmentFloor"
-                    rules={[
-                      {
-                        required: true,
-                        message: " ",
-                      },
-                    ]}
-                  >
-                    <InputNumber min={0} />
-                  </Form.Item>
-                </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 19 }}
-                    label="Угаалгын өрөөний тоо"
-                    name="numOfBathroom"
-                    rules={[
-                      {
-                        required: true,
-                        message: " ",
-                      },
-                    ]}
-                  >
-                    <InputNumber min={0} placeholder="0" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 12 }}
-                    label="Баригдсан огноо"
-                    name="commencementDate"
-                  >
-                    <DatePicker placeholder="Сонгох" />
-                  </Form.Item>
-                </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 19 }}
-                    label="Цонхны тоо"
-                    name="numOfWindow"
-                    rules={[
-                      {
-                        required: true,
-                        message: " ",
-                      },
-                    ]}
-                  >
-                    <InputNumber min={0} placeholder="0" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 12 }}
-                    label="Ашиглалтад орсон огноо"
-                    name="launchDate"
-                  >
-                    <DatePicker placeholder="Сонгох" />
-                  </Form.Item>
-                </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 19 }}
-                    label="Орцын тоо"
-                    name="numOfEntry"
-                    rules={[
-                      {
-                        required: true,
-                        message: " ",
-                      },
-                    ]}
-                  >
-                    <InputNumber min={0} placeholder="0" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 12 }}
-                    label="Барилгын материал"
-                    name="buildingMaterial"
-                  >
-                    <Input />
-                  </Form.Item>
-                </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 19 }}
-                    label="Гарцын тоо"
-                    name="numOfExit"
-                    rules={[
-                      {
-                        required: true,
-                        message: " ",
-                      },
-                    ]}
-                  >
-                    <InputNumber min={0} placeholder="0" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 12 }}
-                    label="Талбайн хэмжээ"
-                    name="baseArea"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Утга оруулна уу!",
-                      },
-                    ]}
-                  >
-                    <InputNumber min={0} addonAfter="мкв" />
-                  </Form.Item>
-                </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 19 }}
-                    label="Дотор машин зогсоолын тоо"
-                    name="numOfGarage"
-                  >
-                    <InputNumber min={0} placeholder="0" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 12 }}
-                    label="Таазны өндөр"
-                    name="ceilingHeight"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Утга оруулна уу!",
-                      },
-                    ]}
-                  >
-                    <InputNumber min={0} />
-                  </Form.Item>
-                </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 15 }}
-                    label="Дотор машин зогсоолын үнэ"
-                    name="garagePrice"
-                  >
-                    <InputNumber min={0} placeholder="0" addonAfter="₮" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 12 }}
-                    label="Барилгын CCTV тоо"
-                    name="buildingNumOfCCTV"
-                  >
-                    <InputNumber min={0} />
-                  </Form.Item>
-                </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 17 }}
-                    label="Газар хөдлөлтийн тэсвэр"
-                    name="earthquakeResistance"
-                  >
-                    <InputNumber min={0} placeholder="0" addonAfter="мт" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="border-b border-1 mb-6"></div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 20 }}
-                    label="Төвийн шугамд холбогдсон эсэх"
-                    name="isCentralWaterSupplies"
+                    labelCol={{ span: 9 }}
+                    label="Гадна машины зогсоолтой эсэх"
+                    name="isParkingLot"
                     valuePropName="checked"
                     initialValue={false}
                   >
                     <Checkbox />
                   </Form.Item>
-                </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 15 }}
-                    label="Хүлээлгийн танхимтай эсэх"
-                    name="isLobby"
-                    valuePropName="checked"
-                    initialValue={false}
-                  >
-                    <Checkbox />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 20 }}
-                    label="Нэмэлт цахилгааны эх үүсвэртэй эсэх"
-                    name="isAdditionalPowerSupplies"
-                    valuePropName="checked"
-                    initialValue={false}
-                  >
-                    <Checkbox />
-                  </Form.Item>
-                </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 15 }}
-                    label="Аваарын гарцтай эсэх"
-                    name="isEmergencyExit"
-                    valuePropName="checked"
-                    initialValue={false}
-                  >
-                    <Checkbox />
-                  </Form.Item>
-                </div>
-              </div>
-              <Form.Item
-                labelCol={{ span: 9 }}
-                label="Гадна машины зогсоолтой эсэх"
-                name="isParkingLot"
-                valuePropName="checked"
-                initialValue={false}
-              >
-                <Checkbox />
-              </Form.Item>
+                </>
+              ) : (
+                <>
+                  <div className="grid grid-cols-2 gap-12 pr-24">
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 12 }}
+                        label="Талбайн хэмжээ"
+                        name="baseArea"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Утга оруулна уу!",
+                          },
+                        ]}
+                      >
+                        <InputNumber min={0} addonAfter="мкв" />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 12 }}
+                        label="Зориулалт"
+                        name="purpose"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Утга оруулна уу!",
+                          },
+                        ]}
+                      >
+                        <Select>
+                          <Option value="Зуслан">Зуслан</Option>
+                          <Option value="Үйчилгээ">Үйчилгээ</Option>
+                          <Option value="Амралтын газар">Амралтын газар</Option>
+                          <Option value="Газар тариалан">Газар тариалан</Option>
+                          <Option value="Мал аж ахуй">Мал аж ахуй</Option>
+                          <Option value="Бэлчээр">Бэлчээр</Option>
+                        </Select>
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="border-b border-1 mb-6"></div>
+                  <div className="grid grid-cols-2 gap-12 pr-14">
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 20 }}
+                        label="Төвийн шугамд холбогдсон эсэх"
+                        name="isCentralWaterSupplies"
+                        valuePropName="checked"
+                        initialValue={false}
+                      >
+                        <Checkbox />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-1">
+                      <Form.Item
+                        labelCol={{ span: 18 }}
+                        label="Нэмэлт цахилгааны эх үүсвэртэй эсэх"
+                        name="isAdditionalPowerSupplies"
+                        valuePropName="checked"
+                        initialValue={false}
+                      >
+                        <Checkbox />
+                      </Form.Item>
+                    </div>
+                  </div>
+                </>
+              )}
+
               <div className="border-b border-1 mb-6"></div>
               <div className="flex justify-center gap-4">
                 <Button onClick={() => setCurrent(current - 1)}>Буцах</Button>
@@ -974,6 +1340,19 @@ export default function Dashboard() {
                   </label>
                 )}
               </div>
+              <Form.Item
+                //labelCol={{ span: 10 }}
+                label="Гэрчилгээ хавсаргах"
+                name="certificate"
+              >
+                <div className="bg-gray-100 p-2 mx-16 rounded-lg">
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    onChange={onCertificateChange}
+                  />
+                </div>
+              </Form.Item>
               <div className="border-b border-1 mb-6"></div>
               <Form.Item
                 //labelCol={{ span: 10 }}
@@ -986,9 +1365,10 @@ export default function Dashboard() {
               <div className="flex justify-center gap-4">
                 <Button onClick={() => setCurrent(current - 1)}>Буцах</Button>
                 <Button
+                  loading={loading}
                   htmlType="submit"
                   className="text-white bg-green-600 border-none"
-                  //onClick={() => setCurrent(current + 1)}
+                  onClick={handleSubmit}
                 >
                   Хадгалах
                 </Button>

@@ -97,3 +97,14 @@ div {
   padding: 4px 14px;
   border-radius: 7px;
 }
+
+.ant-form-item .ant-form-item-explain-error {
+  font-size: 11px;
+}
+
+.carousel-img {
+  width: 600px;
+  height: 300px;
+  object-fit: "cover";
+  border-radius: 10px;
+}

@@ -12,173 +12,159 @@ const propertySchema = new Schema(
       type: String,
       required: true,
     },
-    registrationDate: {
-        type: Date,
-        required: true,
-    },
     typeId: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
     statusId: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
-    ownerId: {
-        type: Number,
-        required: true,
+    ownerRegNo: {
+      type: String,
+      required: true,
     },
     certificate: {
-        type: String,
-        required: true,
+      type: String,
+      required: true,
     },
     zipCode: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
-    locationId: {
-        type: Number,
-        required: true,
+    regionId: {
+      type: Number,
+      required: true,
+    },
+    cityId: {
+      type: Number,
+      required: true,
+    },
+    districtId: {
+      type: Number,
+      required: true,
+    },
+    streetId: {
+      type: Number,
+      required: true,
     },
     buildingName: {
-        type: String,
-        required: true,
+      type: String,
     },
     buildingTotalFloor: {
-        type: Number,
-        required: true,
-    },
-    apartmentName: {
-        type: String,
-        required: true,
+      type: Number,
     },
     apartmentFloor: {
-        type: Number,
-        required: true,
+      type: Number,
     },
     buildingMaterial: {
-        type: String,
+      type: String,
     },
     buildingNumOfCCTV: {
-        type: Number,
+      type: Number,
     },
     commencementDate: {
-        type: Date,
+      type: Date,
     },
     launchDate: {
-        type: Date,
-    },
-    currencyId: {
-        type: Number,
-        required: true,
-    },
-    currencyRate: {
-        type: Number,
-        required: true,
+      type: Date,
     },
     unitMaxPrice: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
     totalMaxPrice: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
     unitMinPrice: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
     totalMinPrice: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
     unitAvgPrice: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
     totalAvgPrice: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
     ceilingHeight: {
-        type: Number,
-        required: true,
+      type: Number,
     },
     baseArea: {
-        type: Number,
-        required: true,
+      type: Number,
+      required: true,
     },
     numOfRoom: {
-        type: Number,
-        required: true,
+      type: Number,
     },
     numOfBedroom: {
-        type: Number,
-        required: true,
+      type: Number,
     },
     numOfBathroom: {
-        type: Number,
-        required: true,
+      type: Number,
     },
     numOfGarage: {
-        type: Number,
+      type: Number,
     },
     garagePrice: {
-        type: Number,
+      type: Number,
     },
     numOfEntry: {
-        type: Number,
-        required: true,
+      type: Number,
     },
     numOfExit: {
-        type: Number,
-        required: true,
+      type: Number,
     },
     numOfWindow: {
-        type: Number,
-        required: true,
+      type: Number,
     },
     isCentralWaterSupplies: {
-        type: Boolean,
-        required: true,
+      type: Boolean,
     },
     isLobby: {
-        type: Boolean,
-        required: true,
+      type: Boolean,
     },
     isAdditionalPowerSupplies: {
-        type: Boolean,
-        required: true,
+      type: Boolean,
+      required: true,
     },
     isParkingLot: {
-        type: Boolean,
-        required: true,
+      type: Boolean,
     },
     isEmergencyExit: {
-        type: Boolean,
-        required: true,
+      type: Boolean,
     },
     earthquakeResistance: {
-        type: String, 
+      type: String,
     },
     distanceToDowntown: {
-        type: Number,
+      type: Number,
     },
     distanceToSchool: {
-        type: Number,
+      type: Number,
     },
     distanceToUniversity: {
-        type: Number,
+      type: Number,
     },
     distanceToKindergarten: {
-        type: Number,
+      type: Number,
     },
-    pics: {
+    purpose: {
+      type: String,
+    },
+    pics: [
+      {
         type: String,
-        required: true,
-    },
+      },
+    ],
     otherInfo: {
-        type: String,
+      type: String,
     },
   },
   { timestamps: true }
