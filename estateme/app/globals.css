@@ -65,7 +65,7 @@ div {
 }
 
 .ant-btn-default:hover {
-  background: #4882db !important;
+  background: #008cc7 !important;
   color: white !important;
   border-color: white !important;
 }
@@ -108,3 +108,8 @@ div {
   object-fit: "cover";
   border-radius: 10px;
 }
+
+.ant-btn-submit:hover {
+  background: #135724 !important;
+}
+
