@@ -113,3 +113,12 @@ div {
   background: #135724 !important;
 }
 
+.btn-back:hover {
+  background: #008cc7 !important;
+  border-color: white !important;
+}
+
+.btn-back:hover svg path {
+  fill: white !important;
+}
+

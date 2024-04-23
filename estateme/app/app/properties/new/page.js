@@ -426,7 +426,7 @@ export default function Dashboard() {
       <Form onFinish={handleFinish} autoComplete="off" form={form}>
         <div className="pt-6 pb-5 flex gap-4">
           <div
-            className="rounded-lg p-1 cursor-pointer border border-[#008cc7] -mt-1"
+            className="rounded-lg p-1 cursor-pointer border border-[#008cc7] -mt-1 btn-back"
             onClick={() => router.back()}
           >
             <BackIcon />
@@ -443,6 +443,25 @@ export default function Dashboard() {
             </Form.Item>
             <Form.Item label="Огноо">
               <div className="pr">{date}</div>
+            </Form.Item>
+            <Form.Item
+              label="Зорилго"
+              name="purposeId"
+              rules={[
+                {
+                  required: true,
+                  message: "Утга оруулна уу!",
+                },
+              ]}
+            >
+              <Select
+                placeholder="Сонгох"
+                style={{ width: "180px" }}
+                onChange={onTypeSelect}
+              >
+                <Option value="1">Худалдах</Option>
+                <Option value="2">Түрээслүүлэх</Option>
+              </Select>
             </Form.Item>
             <Form.Item
               label="Төрөл"
