@@ -316,7 +316,7 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex flex-wrap">
-            <div className="w-1/2 px-2">
+            <div className="w-full px-2">
               <Form.Item
                 label="И-мейл"
                 name="email"
@@ -330,7 +330,7 @@ export default function Dashboard() {
                 <Input />
               </Form.Item>
             </div>
-            <div className="w-1/2 px-2">
+            <div className="w-full px-2">
               <Form.Item
                 label="Утасны дугаар"
                 name="phoneNumber"
@@ -346,7 +346,7 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex flex-wrap">
-            <div className="w-1/2 px-2">
+            <div className="w-full px-2">
               <Form.Item
                 label="Албан тушаал"
                 name="employeeType"
@@ -364,7 +364,7 @@ export default function Dashboard() {
                 </Select>
               </Form.Item>
             </div>
-            <div className="w-1/2 px-2">
+            <div className="w-full px-2">
               <Form.Item
                 label="Нууц үг"
                 name="password"
@@ -384,7 +384,7 @@ export default function Dashboard() {
               <Button onClick={() => setRegisterModalOpen(false)}>Буцах</Button>
               <Button
                 loading={loading}
-                className="border-white bg-green-600 text-white ml-2"
+                className="border-white bg-green-600 text-white ml-2 ant-btn-submit"
                 htmlType="submit"
               >
                 Хадгалах
@@ -392,6 +392,7 @@ export default function Dashboard() {
             </Form.Item>
           </div>
         </Form>
+        
       </Modal>
       {selectedEmployee && (
         <Modal
