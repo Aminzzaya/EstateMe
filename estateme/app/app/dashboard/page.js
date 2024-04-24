@@ -326,7 +326,7 @@ export default function Dashboard() {
             <div className="col-span-3 pl-12">
               <p className="font-semibold text-[15px] text-[#008cc7]">ГРАФИК</p>
               <p className="pl-[110px] py-2 font-medium">2024 оны I улирал</p>
-              <div className="h-[350px]">
+              <div className="h-[350px] max-w-[450px]">
                 <Doughnut options={options} data={doughnutData} />
               </div>
             </div>
