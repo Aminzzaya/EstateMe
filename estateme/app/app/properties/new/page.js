@@ -443,7 +443,7 @@ export default function Dashboard() {
           </p>
         </div>
         <div>
-          <div className="flex gap-24">
+          <div className="flex gap-24 px-16">
             <div className="flex-1">
               <Form.Item label="ҮХХ-ийн дугаар">
                 <div className="pr">{propertyId}</div>
