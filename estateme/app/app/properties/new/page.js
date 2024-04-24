@@ -424,7 +424,7 @@ export default function Dashboard() {
 
   return (
     <main className="px-12 py-8">
-      <Form onFinish={handleFinish} autoComplete="off" form={form}>
+      <Form layout={"vertical"} onFinish={handleFinish} autoComplete="off" form={form}>
         <div className="pt-6 pb-5 flex gap-4">
           <div
             className="rounded-lg p-1 cursor-pointer border border-[#008cc7] -mt-1 btn-back"
@@ -438,13 +438,18 @@ export default function Dashboard() {
           </p>
         </div>
         <div>
-          <div className="flex gap-12">
-            <Form.Item label="№">
+          <div className="flex gap-24">
+          <div className="flex-1">
+            <Form.Item label="ҮХХ-ийн дугаар">
               <div className="pr">{propertyId}</div>
             </Form.Item>
+            </div>
+            <div className="flex-1">
             <Form.Item label="Огноо">
               <div className="pr">{date}</div>
             </Form.Item>
+            </div>
+            <div className="flex-1">
             <Form.Item
               label="Зорилго"
               name="purpose"
@@ -460,6 +465,8 @@ export default function Dashboard() {
                 <Option value="Түрээслүүлэх">Түрээслүүлэх</Option>
               </Select>
             </Form.Item>
+            </div>
+            <div className="flex-1">
             <Form.Item
               label="Төрөл"
               name="typeId"
@@ -482,6 +489,7 @@ export default function Dashboard() {
                 <Option value="5">Зогсоолын талбай</Option>
               </Select>
             </Form.Item>
+            </div>
           </div>
           <div>
             <List
@@ -515,6 +523,7 @@ export default function Dashboard() {
           {current == 0 && (
             <div className="page-content p-6 px-10 pt-8">
               <div className="flex gap-4">
+              <div className="w-1/2 px-2">
                 <Form.Item
                   label="Регистрийн дугаар"
                   name="registerNumber"
@@ -527,16 +536,19 @@ export default function Dashboard() {
                 >
                   <Input maxLength={10} onChange={handleInputChange} />
                 </Form.Item>
+                </div>
+                <div className="flex items-center pt-1">
                 <Button
                   className="text-white bg-[#008cc7] border-none"
                   onClick={getOwnerInfo}
                 >
                   <SearchIcon />
                 </Button>
+                </div>
               </div>
               <div className="border-b border-1 mb-6"></div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
+              <div className="flex flex-wrap">
+                <div className="w-1/2 px-2">
                   <Form.Item
                     labelCol={{ span: 10 }}
                     label="Овог"
@@ -551,24 +563,7 @@ export default function Dashboard() {
                     <Input />
                   </Form.Item>
                 </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 10 }}
-                    label="Утасны дугаар"
-                    name="phoneNumber"
-                    rules={[
-                      {
-                        required: true,
-                        message: "Утга оруулна уу!",
-                      },
-                    ]}
-                  >
-                    <Input maxLength={8} />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
+                <div className="w-1/2 px-2">
                   <Form.Item
                     labelCol={{ span: 10 }}
                     label="Нэр"
@@ -583,7 +578,23 @@ export default function Dashboard() {
                     <Input />
                   </Form.Item>
                 </div>
-                <div className="col-span-1">
+              </div>
+              <div className="w-full px-2">
+                  <Form.Item
+                    labelCol={{ span: 10 }}
+                    label="Утасны дугаар"
+                    name="phoneNumber"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Утга оруулна уу!",
+                      },
+                    ]}
+                  >
+                    <Input maxLength={8} />
+                  </Form.Item>
+                </div>
+                <div className="w-full px-2">
                   <Form.Item
                     labelCol={{ span: 10 }}
                     label="И-мейл"
@@ -602,9 +613,7 @@ export default function Dashboard() {
                     <Input />
                   </Form.Item>
                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
+                <div className="w-full px-2">
                   <Form.Item
                     labelCol={{ span: 10 }}
                     label="Хүйс"
@@ -622,7 +631,6 @@ export default function Dashboard() {
                     </Select>
                   </Form.Item>
                 </div>
-              </div>
               <div className="border-b border-1 mb-6"></div>
               <div className="flex justify-center">
                 <Button
@@ -637,8 +645,8 @@ export default function Dashboard() {
           )}
           {current == 1 && (
             <div className="page-content p-6 px-10 pt-8">
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
+              <div className="flex flex-wrap">
+                <div className="w-full px-2">
                   <Form.Item
                     labelCol={{ span: 10 }}
                     label="Бүсчлэл"
@@ -655,18 +663,8 @@ export default function Dashboard() {
                     </Select>
                   </Form.Item>
                 </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 19 }}
-                    label="Хотын төв хүртэлх зай"
-                    name="distanceToDowntown"
-                  >
-                    <Input addonAfter="км" />
-                  </Form.Item>
-                </div>
               </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
+              <div className="w-full px-2">
                   <Form.Item
                     labelCol={{ span: 10 }}
                     label="Хот, аймаг"
@@ -687,18 +685,7 @@ export default function Dashboard() {
                     </Select>
                   </Form.Item>
                 </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 19 }}
-                    label="Хамгийн ойр сургууль хүртэлх зай"
-                    name="distanceToSchool"
-                  >
-                    <Input addonAfter="км" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
+              <div className="w-full px-2">
                   <Form.Item
                     labelCol={{ span: 10 }}
                     label="Дүүрэг, сум"
@@ -725,18 +712,7 @@ export default function Dashboard() {
                     </Select>
                   </Form.Item>
                 </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 19 }}
-                    label="Хамгийн ойр их сургууль хүртэлх зай"
-                    name="distanceToUniversity"
-                  >
-                    <Input addonAfter="км" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
+              <div className="w-full px-2">
                   <Form.Item
                     labelCol={{ span: 10 }}
                     label="Хороо, баг"
@@ -757,18 +733,7 @@ export default function Dashboard() {
                     </Select>
                   </Form.Item>
                 </div>
-                <div className="col-span-1">
-                  <Form.Item
-                    labelCol={{ span: 19 }}
-                    label="Хамгийн ойр цэцэрлэг хүртэлх зай"
-                    name="distanceToKindergarten"
-                  >
-                    <Input addonAfter="км" />
-                  </Form.Item>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
-                <div className="col-span-1">
+              <div className="w-full px-2">
                   <Form.Item
                     labelCol={{ span: 10 }}
                     label="Зип код"
@@ -783,7 +748,50 @@ export default function Dashboard() {
                     <Input />
                   </Form.Item>
                 </div>
-              </div>
+                <div className="border-b border-1 mb-6"></div>
+                <p className="flex justify-center font-semibold pb-5">
+                    МАРШРУТ ХООРОНДЫН ЗАЙ
+                  </p>
+                <div className="flex flex-wrap">
+                <div className="w-1/2 px-24">
+                  <Form.Item
+                    labelCol={{ span: 19 }}
+                    label="Хотын төв"
+                    name="distanceToDowntown"
+                  >
+                    <Input addonAfter="км" />
+                  </Form.Item>
+                </div>
+                <div className="w-1/2 px-24">
+                  <Form.Item
+                    labelCol={{ span: 19 }}
+                    label="Хамгийн ойр сургууль"
+                    name="distanceToSchool"
+                  >
+                    <Input addonAfter="км" />
+                  </Form.Item>
+                  </div>
+                </div>
+                <div className="flex flex-wrap">
+                <div className="w-1/2 px-24">
+                  <Form.Item
+                    labelCol={{ span: 19 }}
+                    label="Хамгийн ойр их сургууль"
+                    name="distanceToUniversity"
+                  >
+                    <Input addonAfter="км" />
+                  </Form.Item>
+                </div>
+                <div className="w-1/2 px-24">
+                  <Form.Item
+                    labelCol={{ span: 19 }}
+                    label="Хамгийн ойр цэцэрлэг"
+                    name="distanceToKindergarten"
+                  >
+                    <Input addonAfter="км" />
+                  </Form.Item>
+                  </div>
+                </div>
               <div className="border-b border-1 mb-6"></div>
               <div className="flex justify-center gap-4">
                 <Button onClick={() => setCurrent(current - 1)}>Буцах</Button>
@@ -802,7 +810,7 @@ export default function Dashboard() {
               {type == 0 ? (
                 <>
                   <div className="grid grid-cols-2 gap-12 pr-14">
-                    <div className="col-span-1">
+                  <div className="col-span-1">
                       <Form.Item
                         labelCol={{ span: 12 }}
                         label="Барилгын нэр"
@@ -817,6 +825,7 @@ export default function Dashboard() {
                         <Input />
                       </Form.Item>
                     </div>
+
                     <div className="col-span-1">
                       <Form.Item
                         labelCol={{ span: 19 }}
