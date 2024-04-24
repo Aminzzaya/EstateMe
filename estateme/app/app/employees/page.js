@@ -224,13 +224,13 @@ export default function Dashboard() {
           <div className="page-content pt-6 pb-1">
             <div className="grid grid-cols-12 gap-8 px-6">
               <div className="col-span-2">
-                <p className="font-medium">Овог, нэр</p>
+                <p className="font-medium">Нэр, овог</p>
               </div>
               <div className="col-span-2">
                 <p className="font-medium">Албан тушаал</p>
               </div>
               <div className="col-span-3">
-                <p className="font-medium text-center">И-мейл</p>
+                <p className="font-medium text-center">Цахим шуудан</p>
               </div>
               <div className="col-span-2">
                 <p className="font-medium text-center">Утасны дугаар</p>
@@ -354,7 +354,7 @@ export default function Dashboard() {
               <div className="flex flex-wrap">
                 <div className="w-full px-2">
                   <Form.Item
-                    label="И-мейл"
+                    label="Цахим шуудан"
                     name="email"
                     rules={[
                       {
@@ -482,28 +482,28 @@ export default function Dashboard() {
                 initialValues={selectedEmployee}
               >
                 <div className="flex flex-wrap">
-                  <div className="w-1/2 px-2">
-                    <Form.Item label="И-мейл" name="email">
+                  <div className="w-full px-2">
+                    <Form.Item label="Цахим шуудан" name="email">
                       <Input />
                     </Form.Item>
                   </div>
-                  <div className="w-1/2 px-2">
+                  <div className="w-full px-2">
                     <Form.Item label="Утасны дугаар" name="phoneNumber">
                       <Input />
                     </Form.Item>
                   </div>
                 </div>
                 <div className="flex flex-wrap">
-                  <div className="w-1/2 px-2">
+                  <div className="w-full px-2">
                     <Form.Item label="Албан тушаал" name="employeeTypeName">
                       <Select placeholder="Сонгох">
                         <Option value="1">Хэлтсийн захирал</Option>
                         <Option value="2">Менежер</Option>
-                        <Option value="3">Мэргэжилтэн</Option>
+                        <Option value="3">Агент</Option>
                       </Select>
                     </Form.Item>
                   </div>
-                  <div className="w-1/2 px-2">
+                  <div className="w-full px-2">
                     <Form.Item label="Төлөв" name="status">
                       <Select>
                         <Option value="Идэвхтэй">Идэвхтэй</Option>
@@ -518,7 +518,7 @@ export default function Dashboard() {
                       Буцах
                     </Button>
                     <Button
-                      className="border-white bg-green-600 text-white ml-2"
+                      className="border-white bg-green-600 text-white ml-2 ant-btn-submit"
                       htmlType="submit"
                     >
                       Хадгалах

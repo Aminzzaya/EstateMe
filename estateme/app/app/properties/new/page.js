@@ -602,7 +602,7 @@ export default function Dashboard() {
               <div className="w-full px-2">
                 <Form.Item
                   labelCol={{ span: 10 }}
-                  label="И-мейл"
+                  label="Цахим шуудан"
                   name="email"
                   rules={[
                     {

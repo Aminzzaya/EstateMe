@@ -269,19 +269,19 @@ export default function Settings() {
               initialValues={user}
             >
               <div className="flex flex-wrap">
-                <div className="w-1/2 px-2">
-                  <Form.Item label="И-мейл" name="email">
+                <div className="w-full px-2">
+                  <Form.Item label="Цахим шуудан" name="email">
                     <Input />
                   </Form.Item>
                 </div>
-                <div className="w-1/2 px-2">
+                <div className="w-full px-2">
                   <Form.Item label="Утасны дугаар" name="phoneNumber">
                     <Input />
                   </Form.Item>
                 </div>
               </div>
               <div className="flex flex-wrap">
-                <div className="w-1/2 px-2">
+                <div className="w-full px-2">
                   <Form.Item label="Нууц үг" name="password">
                     <Input.Password />
                   </Form.Item>
@@ -292,7 +292,7 @@ export default function Settings() {
                   <Button onClick={() => setEditModalOpen(false)}>Буцах</Button>
                   <Button
                     loading={loadingBtn}
-                    className="border-white bg-green-600 text-white ml-2"
+                    className="border-white bg-green-600 text-white ml-2 ant-btn-submit"
                     htmlType="submit"
                   >
                     Хадгалах
