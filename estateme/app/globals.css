@@ -122,3 +122,7 @@ div {
 .btn-back:hover svg path {
   fill: white !important;
 }
+
+/* .bb {
+  display: inline-flex !important ;
+} */
