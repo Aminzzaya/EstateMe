@@ -449,7 +449,7 @@ export default function Dashboard() {
                 <div className="pr">{propertyId}</div>
               </Form.Item>
             </div>
-            <div className="flex-1">
+            <div className="w-1/7">
               <Form.Item label="Огноо">
                 <div className="pr">{date}</div>
               </Form.Item>
@@ -526,9 +526,9 @@ export default function Dashboard() {
             />
           </div>
           {current == 0 && (
-            <div className="page-content p-6 px-10 pt-8">
+            <div className="page-content p-6 px-12 pt-8">
               <div className="flex gap-4">
-                <div className="w-1/2 px-2">
+                <div className="w-1/4 px-2">
                   <Form.Item
                     label="Регистрийн дугаар"
                     name="registerNumber"
@@ -669,9 +669,10 @@ export default function Dashboard() {
                   </Form.Item>
                 </div>
               </div>
-              <div className="w-full px-2">
+              <div className="flex flex-wrap">
+              <div className="w-1/4 px-2">
                 <Form.Item
-                  labelCol={{ span: 10 }}
+                  labelCol={{ span: 19 }}
                   label="Хот, аймаг"
                   name="cityId"
                   rules={[
@@ -690,9 +691,9 @@ export default function Dashboard() {
                   </Select>
                 </Form.Item>
               </div>
-              <div className="w-full px-2">
+              <div className="w-1/4 px-2">
                 <Form.Item
-                  labelCol={{ span: 10 }}
+                  labelCol={{ span: 19 }}
                   label="Дүүрэг, сум"
                   name="districtId"
                   rules={[
@@ -714,9 +715,9 @@ export default function Dashboard() {
                   </Select>
                 </Form.Item>
               </div>
-              <div className="w-full px-2">
+              <div className="w-1/4 px-2">
                 <Form.Item
-                  labelCol={{ span: 10 }}
+                  labelCol={{ span: 19 }}
                   label="Хороо, баг"
                   name="streetId"
                   rules={[
@@ -735,9 +736,9 @@ export default function Dashboard() {
                   </Select>
                 </Form.Item>
               </div>
-              <div className="w-full px-2">
+              <div className="w-1/4 px-2">
                 <Form.Item
-                  labelCol={{ span: 10 }}
+                  labelCol={{ span: 19 }}
                   label="Зип код"
                   name="zipCode"
                   rules={[
@@ -750,7 +751,10 @@ export default function Dashboard() {
                   <Input />
                 </Form.Item>
               </div>
+              </div>
+
               <div className="border-b border-1 mb-6"></div>
+
               <p className="flex justify-center font-semibold pb-5">
                 МАРШРУТ ХООРОНДЫН ЗАЙ
               </p>
@@ -812,7 +816,7 @@ export default function Dashboard() {
               {type == 0 ? (
                 <>
                   <div className="flex flex-wrap">
-                    <div className="w-full">
+                    <div className="w-full px-2">
                       <Form.Item
                         labelCol={{ span: 25 }}
                         label="Барилгын нэр/Барилгын дугаар"
@@ -1252,10 +1256,10 @@ export default function Dashboard() {
           )}
           {current == 3 && (
             <div className="page-content p-6 px-10 pt-8">
-              <div className="grid grid-cols-2 gap-12 pr-14">
+              <div className="grid grid-cols-2 gap-12 pr-14 justify-items-center">
                 <div className="col-span-1">
                   <p className="flex justify-center font-semibold pb-5">
-                    1 М.КВ
+                    1 м.кв
                   </p>
                   <Form.Item
                     labelCol={{ span: 10 }}
@@ -1276,9 +1280,9 @@ export default function Dashboard() {
                   </Form.Item>
                 </div>
                 <div className="col-span-1">
-                  <p className="flex justify-center font-semibold pb-5">НИЙТ</p>
+                  <p className="flex justify-center font-semibold pb-5">Нийт</p>
                   <Form.Item
-                    labelCol={{ span: 10 }}
+                    labelCol={{ span: 15 }}
                     label="Дээд үнэ"
                     name="totalMaxPrice"
                   >
@@ -1290,10 +1294,10 @@ export default function Dashboard() {
                   </Form.Item>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
+              <div className="grid grid-cols-2 gap-12 pr-14 justify-items-center">
                 <div className="col-span-1">
                   <Form.Item
-                    labelCol={{ span: 10 }}
+                    labelCol={{ span: 15 }}
                     label="Доод үнэ"
                     name="unitMinPrice"
                     rules={[
@@ -1312,7 +1316,7 @@ export default function Dashboard() {
                 </div>
                 <div className="col-span-1">
                   <Form.Item
-                    labelCol={{ span: 10 }}
+                    labelCol={{ span: 15 }}
                     label="Доод үнэ"
                     name="totalMinPrice"
                   >
@@ -1324,10 +1328,10 @@ export default function Dashboard() {
                   </Form.Item>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-12 pr-14">
+              <div className="grid grid-cols-2 gap-12 pr-14 justify-items-center">
                 <div className="col-span-1">
                   <Form.Item
-                    labelCol={{ span: 10 }}
+                    labelCol={{ span: 15 }}
                     label="Дундаж үнэ"
                     name="unitAvgPrice"
                   >
@@ -1340,7 +1344,7 @@ export default function Dashboard() {
                 </div>
                 <div className="col-span-1">
                   <Form.Item
-                    labelCol={{ span: 10 }}
+                    labelCol={{ span: 15 }}
                     label="Дундаж үнэ"
                     name="totalAvgPrice"
                   >
