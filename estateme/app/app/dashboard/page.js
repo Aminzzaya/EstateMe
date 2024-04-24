@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import "chart.js/auto";
 import React, { useState, useEffect } from "react";
 import {
   Form,
@@ -12,6 +13,7 @@ import {
   Modal,
   Carousel,
   Tooltip,
+  message,
 } from "antd";
 import {
   MapIcon,
@@ -24,7 +26,9 @@ import {
   WalletIcon,
   TrashIcon,
   DateIcon,
+  CarIcon,
 } from "@/components/Icons";
+import { Doughnut } from "react-chartjs-2";
 import { LoadingOutlined } from "@ant-design/icons";
 import Nav from "@/components/Nav";
 
@@ -34,13 +38,14 @@ export default function Dashboard() {
   const [propertyModalOpen, setPropertyModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [employeeId, setEmployeeId] = useState(null);
+  const [loadingBtn, setLoadingBtn] = useState(false);
 
   useEffect(() => {
-    const employee = JSON.parse(localStorage.getItem("user"));
-    getProperties();
-
+    const employee = localStorage.getItem("employeeId");
     if (employee) {
-      getProperties(employee.employeeId);
+      getProperties(employee);
+      setEmployeeId(employee);
     }
   }, []);
 
@@ -70,7 +75,32 @@ export default function Dashboard() {
     }
   };
 
-  console.log(properties);
+  const deleteProperty = async (propertyId) => {
+    setLoadingBtn(true);
+    try {
+      const response = await fetch("/api/deleteProperty", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ propertyId }),
+      });
+      if (response.ok) {
+        message.success("Амжилттай устгалаа!");
+        setDeleteModalOpen(false);
+        getProperties(employeeId);
+      } else {
+        console.error(
+          "Алдаа: Үл хөдлөх хөрөнгө устгах FE:",
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Алдаа: Үл хөдлөх хөрөнгө устгах BE:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getStatusColor = (statusName) => {
     switch (statusName) {
@@ -161,6 +191,67 @@ export default function Dashboard() {
     cancelSort: "Ангилсныг арилгах",
   };
 
+  const options = {
+    responsive: true,
+    plugins: {
+      tooltip: {
+        bodyFont: {
+          family: "Montserrat",
+        },
+        titleFont: {
+          family: "Montserrat",
+        },
+      },
+      legend: {
+        position: "bottom",
+        labels: {
+          font: { family: "Montserrat" },
+        },
+      },
+    },
+  };
+
+  const labels = [
+    "Бүртгэгдсэн",
+    "Тохиролцсон",
+    "Гэрээ хийгдэж байгаа",
+    "Худалдсан",
+    "Яаралтай",
+    "Цуцалсан",
+  ];
+
+  const doughnut = labels.reduce((counts, label) => {
+    counts[label] = 0;
+    return counts;
+  }, {});
+
+  properties.forEach((property) => {
+    const statusName = property.statusName;
+    if (labels.includes(statusName)) {
+      doughnut[statusName]++;
+    }
+  });
+
+  const data = Object.values(doughnut);
+
+  const doughnutData = {
+    labels: labels,
+    datasets: [
+      {
+        data: data,
+        backgroundColor: [
+          "#3B82F6",
+          "#7C3AED",
+          "#FDE047",
+          "#22C55E",
+          "#EA580C",
+          "#DC2626",
+        ],
+        label: "Үл хөдлөх хөрөнгө",
+      },
+    ],
+  };
+
   return (
     <>
       {loading ? (
@@ -232,8 +323,12 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-            <div className="col-span-3">
+            <div className="col-span-3 pl-12">
               <p className="font-semibold text-[15px] text-[#008cc7]">ГРАФИК</p>
+              <p className="pl-[110px] py-2 font-medium">2024 оны I улирал</p>
+              <div className="h-[350px]">
+                <Doughnut options={options} data={doughnutData} />
+              </div>
             </div>
           </div>
           {propertyModalOpen && selectedProperty && (
@@ -352,7 +447,9 @@ export default function Dashboard() {
                           {selectedProperty.buildingTotalFloor} давхар{" "}
                           {selectedProperty.typeName}
                         </p>
-                        <p className="w-1/2 text-start">ҮХХ: 2 давхар</p>
+                        <p className="w-1/2 text-start">
+                          ҮХХ: {selectedProperty.apartmentFloor} давхар
+                        </p>
                       </div>
                     )}
                     <div className="pt-[2px] flex justify-between">
@@ -383,20 +480,17 @@ export default function Dashboard() {
                       </>
                     )}
                     {selectedProperty.numOfWindow && (
-                      <>
-                        <div className="flex gap-2 pt-3 -ml-[5px]">
-                          <p className="bg-gray-100 px-2 py-1 rounded-xl">
-                            {selectedProperty.numOfWindow} цонхтой
-                          </p>
-                          <p className="bg-gray-100 px-2 py-1 rounded-xl">
-                            {selectedProperty.numOfEntry} орцтой
-                          </p>
-                          <p className="bg-gray-100 px-2 py-1 rounded-xl">
-                            {selectedProperty.numOfExit} гарцтай
-                          </p>
-                        </div>
-                        <div className="border-b pt-4"></div>
-                      </>
+                      <div className="flex gap-2 pt-3 -ml-[5px]">
+                        <p className="bg-gray-100 px-2 py-1 rounded-xl">
+                          {selectedProperty.numOfWindow} цонхтой
+                        </p>
+                        <p className="bg-gray-100 px-2 py-1 rounded-xl">
+                          {selectedProperty.numOfEntry} орцтой
+                        </p>
+                        <p className="bg-gray-100 px-2 py-1 rounded-xl">
+                          {selectedProperty.numOfExit} гарцтай
+                        </p>
+                      </div>
                     )}
                     {selectedProperty.buildingMaterial && (
                       <p className="pt-3">
@@ -418,6 +512,7 @@ export default function Dashboard() {
                 </div>
                 {selectedProperty.commencementDate && (
                   <>
+                    <div className="border-t mt-4 mx-10"></div>
                     <div className="flex pt-4 items-center gap-[9px]">
                       <div className="text-gray-500 pl-[2px]">
                         <DateIcon />
@@ -437,19 +532,23 @@ export default function Dashboard() {
                   </>
                 )}
                 {selectedProperty.numOfGarage && (
-                  <div className="flex pt-4 items-start gap-4 w-[93%]">
-                    <div className="text-gray-500">
-                      <CarIcon />
-                    </div>
-                    <p className="w-3/4">
-                      Дотор машин зогсоолын тоо: {selectedProperty.numOfGarage}
-                    </p>
-                    {selectedProperty.garagePrice && (
-                      <p className="w-1/2 text-start">
-                        Үнэ: {selectedProperty.garagePrice}
+                  <>
+                    <div className="flex pt-4 items-start gap-4 w-[93%]">
+                      <div className="text-gray-500">
+                        <CarIcon />
+                      </div>
+                      <p className="w-3/4">
+                        Дотор машин зогсоолын тоо:{" "}
+                        {selectedProperty.numOfGarage}
                       </p>
-                    )}
-                  </div>
+                      {selectedProperty.garagePrice && (
+                        <p className="w-1/2 text-start">
+                          Үнэ: {selectedProperty.garagePrice}
+                        </p>
+                      )}
+                    </div>
+                    <div className="border-b pt-4 mx-10"></div>
+                  </>
                 )}
                 <div className="flex pt-4 items-center gap-2 w-[93%]">
                   <div className="text-gray-500">
@@ -569,6 +668,7 @@ export default function Dashboard() {
               cancelText="Буцах"
               okText="Устгах"
               okButtonProps={{ style: { backgroundColor: "red" } }}
+              onOk={() => deleteProperty(selectedProperty.propertyId)}
             >
               <div>
                 <div className="pt-3 pb-4 flex items-center gap-2">

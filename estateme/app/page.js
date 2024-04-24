@@ -14,6 +14,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    localStorage.setItem("employeeId", employeeId);
     setLoading(true);
     try {
       const result = await signIn("credentials", {

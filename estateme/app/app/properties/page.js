@@ -341,7 +341,9 @@ export default function Dashboard() {
                           {selectedProperty.buildingTotalFloor} давхар{" "}
                           {selectedProperty.typeName}
                         </p>
-                        <p className="w-1/2 text-start">ҮХХ: 2 давхар</p>
+                        <p className="w-1/2 text-start">
+                          ҮХХ: {selectedProperty.apartmentFloor} давхар
+                        </p>
                       </div>
                     )}
                     <div className="pt-[2px] flex justify-between">
@@ -372,20 +374,17 @@ export default function Dashboard() {
                       </>
                     )}
                     {selectedProperty.numOfWindow && (
-                      <>
-                        <div className="flex gap-2 pt-3 -ml-[5px]">
-                          <p className="bg-gray-100 px-2 py-1 rounded-xl">
-                            {selectedProperty.numOfWindow} цонхтой
-                          </p>
-                          <p className="bg-gray-100 px-2 py-1 rounded-xl">
-                            {selectedProperty.numOfEntry} орцтой
-                          </p>
-                          <p className="bg-gray-100 px-2 py-1 rounded-xl">
-                            {selectedProperty.numOfExit} гарцтай
-                          </p>
-                        </div>
-                        <div className="border-b pt-4"></div>
-                      </>
+                      <div className="flex gap-2 pt-3 -ml-[5px]">
+                        <p className="bg-gray-100 px-2 py-1 rounded-xl">
+                          {selectedProperty.numOfWindow} цонхтой
+                        </p>
+                        <p className="bg-gray-100 px-2 py-1 rounded-xl">
+                          {selectedProperty.numOfEntry} орцтой
+                        </p>
+                        <p className="bg-gray-100 px-2 py-1 rounded-xl">
+                          {selectedProperty.numOfExit} гарцтай
+                        </p>
+                      </div>
                     )}
                     {selectedProperty.buildingMaterial && (
                       <p className="pt-3">
@@ -407,6 +406,7 @@ export default function Dashboard() {
                 </div>
                 {selectedProperty.commencementDate && (
                   <>
+                    <div className="border-t mt-4 mx-10"></div>
                     <div className="flex pt-4 items-center gap-[9px]">
                       <div className="text-gray-500 pl-[2px]">
                         <DateIcon />
@@ -426,19 +426,23 @@ export default function Dashboard() {
                   </>
                 )}
                 {selectedProperty.numOfGarage && (
-                  <div className="flex pt-4 items-start gap-4 w-[93%]">
-                    <div className="text-gray-500">
-                      <CarIcon />
-                    </div>
-                    <p className="w-3/4">
-                      Дотор машин зогсоолын тоо: {selectedProperty.numOfGarage}
-                    </p>
-                    {selectedProperty.garagePrice && (
-                      <p className="w-1/2 text-start">
-                        Үнэ: {selectedProperty.garagePrice}
+                  <>
+                    <div className="flex pt-4 items-start gap-4 w-[93%]">
+                      <div className="text-gray-500">
+                        <CarIcon />
+                      </div>
+                      <p className="w-3/4">
+                        Дотор машин зогсоолын тоо:{" "}
+                        {selectedProperty.numOfGarage}
                       </p>
-                    )}
-                  </div>
+                      {selectedProperty.garagePrice && (
+                        <p className="w-1/2 text-start">
+                          Үнэ: {selectedProperty.garagePrice}
+                        </p>
+                      )}
+                    </div>
+                    <div className="border-b pt-4 mx-10"></div>
+                  </>
                 )}
                 <div className="flex pt-4 items-center gap-2 w-[93%]">
                   <div className="text-gray-500">
