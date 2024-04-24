@@ -108,6 +108,11 @@ export default function Dashboard() {
       sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
     },
     {
+      title: "Зорилго",
+      dataIndex: "purpose",
+      sorter: (a, b) => a.purpose - b.purpose,
+    },
+    {
       title: "Байршил",
       dataIndex: "address",
       sorter: (a, b) => b.districtId - a.districtId,
@@ -136,11 +141,6 @@ export default function Dashboard() {
         </>
       ),
       sorter: (a, b) => a.totalAvgPrice - b.totalAvgPrice,
-    },
-    {
-      title: "Зорилго",
-      dataIndex: "purpose",
-      sorter: (a, b) => a.purpose - b.purpose,
     },
     {
       title: "Төлөв",
