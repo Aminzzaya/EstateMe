@@ -473,7 +473,7 @@ export default function Dashboard() {
               rules={[
                 {
                   required: true,
-                  message: "Утга оруулна уу!",
+                  message: "Төрөл сонгоно уу!",
                 },
               ]}
             >
@@ -809,12 +809,68 @@ export default function Dashboard() {
             <div className="page-content p-6 px-10 pt-8">
               {type == 0 ? (
                 <>
-                  <div className="grid grid-cols-2 gap-12 pr-14">
-                  <div className="col-span-1">
+                  <div className="flex flex-wrap">
+                    <div className="w-full">
+                        <Form.Item
+                          labelCol={{ span: 25 }}
+                          label="Барилгын нэр/Барилгын дугаар"
+                          name="buildingName"
+                          rules={[
+                            {
+                              required: true,
+                              message: "Утга оруулна уу!",
+                            },
+                          ]}
+                        >
+                          <Input />
+                        </Form.Item>
+                      </div>
+                    </div>
+
+                    <div className="border-b border-1 mb-6"></div>
+                    <div className="flex flex-wrap">
+                      <p className="w-1/3 font-semibold pb-5">
+                        Огноо:
+                      </p>
+                      <p className="w-1/3 font-semibold pb-5">
+                        Барилгын давхар:
+                      </p>
+                      <p className="w-1/3 font-semibold pb-5">
+                        ҮХХ хэмжээ:
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap items-center">
+                      <div className="w-1/3 px-2">
+                        <Form.Item
+                          labelCol={{ span: 19 }}
+                          label="Баригдсан"
+                          name="commencementDate"
+                        >
+                          <DatePicker placeholder="Сонгох" />
+                        </Form.Item>
+                      </div>
+                      <div className="w-1/3 px-2">
+                        <Form.Item
+                          labelCol={{ span: 19 }}
+                          wrapperCol={{ span: 14 }}
+                          label="Нийт"
+                          name="buildingTotalFloor"
+                          rules={[
+                            {
+                              required: true,
+                              message: " ",
+                            },
+                          ]}
+                        >
+                          <InputNumber min={0} placeholder="0" addonAfter="давхар"/>
+                        </Form.Item>
+                      </div>
+                      <div className="w-1/3 px-2">
                       <Form.Item
                         labelCol={{ span: 12 }}
-                        label="Барилгын нэр"
-                        name="buildingName"
+                        label="Нийт талбай"
+                        name="baseArea"
                         rules={[
                           {
                             required: true,
@@ -822,14 +878,99 @@ export default function Dashboard() {
                           },
                         ]}
                       >
+                        <InputNumber min={0} placeholder="0" addonAfter="мкв" />
+                      </Form.Item>
+                    </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center">
+                      <div className="w-1/3 px-2">
+                        <Form.Item
+                          labelCol={{ span: 19 }}
+                          label="Ашиглалтад орсон"
+                          name="launchDate"
+                        >
+                          <DatePicker placeholder="Сонгох" />
+                        </Form.Item>
+                      </div>
+                      <div className="w-1/3 px-2">
+                        <Form.Item
+                          labelCol={{ span: 19 }}
+                          wrapperCol={{ span: 14 }}
+                          label="ҮХХ"
+                          name="apartmentFloor"
+                          rules={[
+                            {
+                              required: true,
+                              message: " ",
+                            },
+                          ]}
+                        >
+                          <InputNumber min={0} placeholder="0" addonAfter="давхар"/>
+                        </Form.Item>
+                      </div>
+                      <div className="w-1/3 px-2">
+                      <Form.Item
+                        labelCol={{ span: 12 }}
+                        label="Таазны өндөр"
+                        name="ceilingHeight"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Утга оруулна уу!",
+                          },
+                        ]}
+                      >
+                        <InputNumber min={0} placeholder="0" addonAfter="м"/>
+                      </Form.Item>
+                    </div>
+                  </div>
+
+                  <div className="border-b border-1 mb-6"></div>
+
+                  <div className="flex flex-wrap items-center">
+                    <div className="w-full px-2">
+                      <Form.Item
+                        labelCol={{ span: 12 }}
+                        label="Барилгын материал"
+                        name="buildingMaterial"
+                      >
                         <Input />
                       </Form.Item>
                     </div>
+                    <div className="w-full px-2">
+                      <Form.Item
+                        labelCol={{ span: 17 }}
+                        label="Газар хөдлөлтийн тэсвэр"
+                        name="earthquakeResistance"
+                      >
+                        <InputNumber min={0} placeholder="0" addonAfter="магнитуд" />
+                      </Form.Item>
+                    </div>
+                  </div>
 
-                    <div className="col-span-1">
+                  <div className="border-b border-1 mb-6"></div>
+
+                    <div className="flex flex-wrap">
+                      <p className="w-1/4 font-semibold pb-5">
+                        Өрөөний тоо:
+                      </p>
+                      <p className="w-1/4 font-semibold pb-5">
+                        Орц гарцын тоо:
+                      </p>
+                      <p className="w-1/4 font-semibold pb-5">
+                        Бусад:
+                      </p>
+                      <p className="w-1/4 font-semibold pb-5">
+                        Дотор машины зогсоол:
+                      </p>
+                    </div>
+
+                    <div className="flex flex-wrap items-center">
+                    <div className="w-1/4 px-2">
                       <Form.Item
                         labelCol={{ span: 19 }}
-                        label="Нийт өрөөний тоо"
+                        label="Нийт"
                         name="numOfRoom"
                         rules={[
                           {
@@ -841,29 +982,11 @@ export default function Dashboard() {
                         <InputNumber min={0} placeholder="0" />
                       </Form.Item>
                     </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-12 pr-14">
-                    <div className="col-span-1">
-                      <Form.Item
-                        labelCol={{ span: 12 }}
-                        wrapperCol={{ span: 2 }}
-                        label="Барилгын нийт давхар"
-                        name="buildingTotalFloor"
-                        rules={[
-                          {
-                            required: true,
-                            message: " ",
-                          },
-                        ]}
-                      >
-                        <InputNumber min={0} />
-                      </Form.Item>
-                    </div>
-                    <div className="col-span-1">
+                    <div className="w-1/4 px-2">
                       <Form.Item
                         labelCol={{ span: 19 }}
-                        label="Унтлагын өрөөний тоо"
-                        name="numOfBedroom"
+                        label="Орц"
+                        name="numOfEntry"
                         rules={[
                           {
                             required: true,
@@ -874,51 +997,7 @@ export default function Dashboard() {
                         <InputNumber min={0} placeholder="0" />
                       </Form.Item>
                     </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-12 pr-14">
-                    <div className="col-span-1">
-                      <Form.Item
-                        labelCol={{ span: 12 }}
-                        wrapperCol={{ span: 2 }}
-                        label="ҮХХ-ийн давхар"
-                        name="apartmentFloor"
-                        rules={[
-                          {
-                            required: true,
-                            message: " ",
-                          },
-                        ]}
-                      >
-                        <InputNumber min={0} />
-                      </Form.Item>
-                    </div>
-                    <div className="col-span-1">
-                      <Form.Item
-                        labelCol={{ span: 19 }}
-                        label="Угаалгын өрөөний тоо"
-                        name="numOfBathroom"
-                        rules={[
-                          {
-                            required: true,
-                            message: " ",
-                          },
-                        ]}
-                      >
-                        <InputNumber min={0} placeholder="0" />
-                      </Form.Item>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-12 pr-14">
-                    <div className="col-span-1">
-                      <Form.Item
-                        labelCol={{ span: 12 }}
-                        label="Баригдсан огноо"
-                        name="commencementDate"
-                      >
-                        <DatePicker placeholder="Сонгох" />
-                      </Form.Item>
-                    </div>
-                    <div className="col-span-1">
+                    <div className="w-1/4 px-2">
                       <Form.Item
                         labelCol={{ span: 19 }}
                         label="Цонхны тоо"
@@ -933,22 +1012,23 @@ export default function Dashboard() {
                         <InputNumber min={0} placeholder="0" />
                       </Form.Item>
                     </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-12 pr-14">
-                    <div className="col-span-1">
-                      <Form.Item
-                        labelCol={{ span: 12 }}
-                        label="Ашиглалтад орсон огноо"
-                        name="launchDate"
-                      >
-                        <DatePicker placeholder="Сонгох" />
-                      </Form.Item>
-                    </div>
-                    <div className="col-span-1">
+                    <div className="w-1/4 px-2">
                       <Form.Item
                         labelCol={{ span: 19 }}
-                        label="Орцын тоо"
-                        name="numOfEntry"
+                        label="Зогсоолын тоо"
+                        name="numOfGarage"
+                      >
+                        <InputNumber min={0} placeholder="0" />
+                      </Form.Item>
+                    </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center">
+                    <div className="w-1/4 px-2">
+                      <Form.Item
+                        labelCol={{ span: 19 }}
+                        label="Унтлагын өрөө"
+                        name="numOfBedroom"
                         rules={[
                           {
                             required: true,
@@ -959,21 +1039,10 @@ export default function Dashboard() {
                         <InputNumber min={0} placeholder="0" />
                       </Form.Item>
                     </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-12 pr-14">
-                    <div className="col-span-1">
-                      <Form.Item
-                        labelCol={{ span: 12 }}
-                        label="Барилгын материал"
-                        name="buildingMaterial"
-                      >
-                        <Input />
-                      </Form.Item>
-                    </div>
-                    <div className="col-span-1">
+                    <div className="w-1/4 px-2">
                       <Form.Item
                         labelCol={{ span: 19 }}
-                        label="Гарцын тоо"
+                        label="Гарц"
                         name="numOfExit"
                         rules={[
                           {
@@ -985,79 +1054,67 @@ export default function Dashboard() {
                         <InputNumber min={0} placeholder="0" />
                       </Form.Item>
                     </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-12 pr-14">
-                    <div className="col-span-1">
-                      <Form.Item
-                        labelCol={{ span: 12 }}
-                        label="Талбайн хэмжээ"
-                        name="baseArea"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Утга оруулна уу!",
-                          },
-                        ]}
-                      >
-                        <InputNumber min={0} addonAfter="мкв" />
-                      </Form.Item>
-                    </div>
-                    <div className="col-span-1">
+                    <div className="w-1/4 px-2">
                       <Form.Item
                         labelCol={{ span: 19 }}
-                        label="Дотор машин зогсоолын тоо"
-                        name="numOfGarage"
-                      >
-                        <InputNumber min={0} placeholder="0" />
-                      </Form.Item>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-12 pr-14">
-                    <div className="col-span-1">
-                      <Form.Item
-                        labelCol={{ span: 12 }}
-                        label="Таазны өндөр"
-                        name="ceilingHeight"
-                        rules={[
-                          {
-                            required: true,
-                            message: "Утга оруулна уу!",
-                          },
-                        ]}
-                      >
-                        <InputNumber min={0} />
-                      </Form.Item>
-                    </div>
-                    <div className="col-span-1">
-                      <Form.Item
-                        labelCol={{ span: 15 }}
-                        label="Дотор машин зогсоолын үнэ"
-                        name="garagePrice"
-                      >
-                        <InputNumber min={0} placeholder="0" addonAfter="₮" />
-                      </Form.Item>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-12 pr-14">
-                    <div className="col-span-1">
-                      <Form.Item
-                        labelCol={{ span: 12 }}
                         label="Барилгын CCTV тоо"
                         name="buildingNumOfCCTV"
                       >
                         <InputNumber min={0} />
                       </Form.Item>
                     </div>
-                    <div className="col-span-1">
+                    <div className="w-1/4 px-2">
                       <Form.Item
-                        labelCol={{ span: 17 }}
-                        label="Газар хөдлөлтийн тэсвэр"
-                        name="earthquakeResistance"
+                        labelCol={{ span: 15 }}
+                        label="Зогсоолын үнэ"
+                        name="garagePrice"
                       >
-                        <InputNumber min={0} placeholder="0" addonAfter="мт" />
+                        <InputNumber min={0} placeholder="0" addonAfter="₮" />
                       </Form.Item>
                     </div>
                   </div>
+
+                  <div className="flex flex-wrap items-center">
+                  <div className="w-1/4 px-2">
+                      <Form.Item
+                        labelCol={{ span: 19 }}
+                        label="Угаалгын өрөө"
+                        name="numOfBathroom"
+                        rules={[
+                          {
+                            required: true,
+                            message: " ",
+                          },
+                        ]}
+                      >
+                        <InputNumber min={0} placeholder="0" />
+                      </Form.Item>
+                    </div>
+                    </div>
+
+                    
+
+                    <div className="border-b border-1 mb-6"></div>
+
+                    <div className="flex flex-wrap items-center">
+                    <div className="bb w-full px-2">
+                      <Form.Item 
+                        labelCol={{ span: 20 }}
+                        label="Төвийн шугамд холбогдсон эсэх"
+                        name="isCentralWaterSupplies"
+                        valuePropName="checked"
+                        initialValue={false}
+                      >
+                        <div class="inline-flex items-baseline">
+                        <Checkbox />
+                        </div>
+                      </Form.Item>
+                    </div>
+                      
+                    </div>
+
+
+
                   <div className="border-b border-1 mb-6"></div>
                   <div className="grid grid-cols-2 gap-12 pr-14">
                     <div className="col-span-1">
