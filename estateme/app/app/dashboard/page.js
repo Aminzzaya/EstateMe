@@ -186,8 +186,8 @@ export default function Dashboard() {
   ];
 
   const customLocale = {
-    triggerAsc: "Багаас нь их рүү ангилах",
-    triggerDesc: "Ихээс нь бага руу ангилах",
+    triggerAsc: "Багаас их рүү ангилах",
+    triggerDesc: "Ихээс бага руу ангилах",
     cancelSort: "Ангилсныг арилгах",
   };
 
@@ -333,7 +333,7 @@ export default function Dashboard() {
           </div>
           {propertyModalOpen && selectedProperty && (
             <Modal
-              title={`ҮХХ-ийн мэдээлэл / ${selectedProperty.propertyId}`}
+              title={`Үл хөдлөх хөрөнгийн дэлгэрэнгүй мэдээлэл / ${selectedProperty.propertyId}`}
               open={propertyModalOpen}
               onCancel={() => setPropertyModalOpen(false)}
               width={620}
