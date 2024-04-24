@@ -382,6 +382,7 @@ export default function Dashboard() {
           distanceToSchool: formData.distanceToSchool,
           distanceToUniversity: formData.distanceToUniversity,
           distanceToKindergarten: formData.distanceToKindergarten,
+          usage: formData.usage,
           purpose: formData.purpose,
           pics: imageUrls,
           otherInfo: formData.otherInfo,
@@ -446,7 +447,7 @@ export default function Dashboard() {
             </Form.Item>
             <Form.Item
               label="Зорилго"
-              name="purposeId"
+              name="purpose"
               rules={[
                 {
                   required: true,
@@ -454,13 +455,9 @@ export default function Dashboard() {
                 },
               ]}
             >
-              <Select
-                placeholder="Сонгох"
-                style={{ width: "180px" }}
-                onChange={onTypeSelect}
-              >
-                <Option value="1">Худалдах</Option>
-                <Option value="2">Түрээслүүлэх</Option>
+              <Select placeholder="Сонгох" style={{ width: "160px" }}>
+                <Option value="Худалдах">Худалдах</Option>
+                <Option value="Түрээслүүлэх">Түрээслүүлэх</Option>
               </Select>
             </Form.Item>
             <Form.Item
@@ -1133,7 +1130,7 @@ export default function Dashboard() {
                       <Form.Item
                         labelCol={{ span: 12 }}
                         label="Зориулалт"
-                        name="purpose"
+                        name="usage"
                         rules={[
                           {
                             required: true,

@@ -11,8 +11,10 @@ export default function Home() {
   const [employeeId, setEmployeeId] = useState(null);
   const [password, setPassword] = useState(null);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    setLoading(true);
     try {
       const result = await signIn("credentials", {
         employeeId,
@@ -31,6 +33,8 @@ export default function Home() {
       }
     } catch (error) {
       console.error("Алдаа:", error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
@@ -86,6 +90,7 @@ export default function Home() {
             </Form.Item>
             <Form.Item className="flex justify-center py-5 pb-8">
               <Button
+                loading={loading}
                 htmlType="submit"
                 className="text-[#4882DB] border-[#4882DB] bg-white w-40"
               >

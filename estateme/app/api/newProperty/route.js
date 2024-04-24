@@ -50,6 +50,7 @@ export async function POST(req) {
       distanceToUniversity,
       distanceToKindergarten,
       purpose,
+      usage,
       pics,
       otherInfo,
     } = await req.json();
@@ -101,6 +102,7 @@ export async function POST(req) {
       distanceToUniversity,
       distanceToKindergarten,
       purpose,
+      usage,
       pics,
       otherInfo,
     });

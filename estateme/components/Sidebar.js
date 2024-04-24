@@ -92,7 +92,7 @@ export default function Sidebar() {
               className={`flex items-center gap-4 cursor-pointer ${
                 pathname === "/app/dashboard"
                   ? "text-[#008cc7] font-semibold"
-                  : "text-[#6f6f6f]"
+                  : "text-[#6f6f6f] hover:font-medium"
               }`}
               onClick={() => router.push("/app/dashboard")}
             >
@@ -107,7 +107,7 @@ export default function Sidebar() {
                   className={`flex items-center gap-4 cursor-pointer ${
                     pathname === "/app/properties"
                       ? "text-[#008cc7] font-semibold"
-                      : "text-[#6f6f6f]"
+                      : "text-[#6f6f6f] hover:font-medium"
                   }`}
                   onClick={() => router.push("/app/properties")}
                 >
@@ -120,7 +120,7 @@ export default function Sidebar() {
               className={`flex items-center gap-4 cursor-pointer ${
                 pathname === "/app/reports"
                   ? "text-[#008cc7] font-semibold"
-                  : "text-[#6f6f6f]"
+                  : "text-[#6f6f6f] hover:font-medium"
               }`}
               onClick={() => router.push("/app/reports")}
             >
@@ -133,7 +133,7 @@ export default function Sidebar() {
                   className={`flex items-center gap-4 cursor-pointer ${
                     pathname === "/app/employees"
                       ? "text-[#008cc7] font-semibold"
-                      : "text-[#6f6f6f]"
+                      : "text-[#6f6f6f] hover:font-medium"
                   }`}
                   onClick={() => router.push("/app/employees")}
                 >
@@ -144,7 +144,7 @@ export default function Sidebar() {
                   className={`flex items-center gap-4 cursor-pointer ${
                     pathname === "/app/address"
                       ? "text-[#008cc7] font-semibold"
-                      : "text-[#6f6f6f]"
+                      : "text-[#6f6f6f] hover:font-medium"
                   }`}
                   onClick={() => router.push("/app/settings")}
                 >
@@ -158,7 +158,7 @@ export default function Sidebar() {
               className={`flex items-center gap-4 cursor-pointer ${
                 pathname === "/app/settings"
                   ? "text-[#008cc7] font-semibold"
-                  : "text-[#6f6f6f]"
+                  : "text-[#6f6f6f] hover:font-medium"
               }`}
               onClick={() => router.push("/app/settings")}
             >

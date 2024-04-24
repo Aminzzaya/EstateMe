@@ -158,6 +158,9 @@ const propertySchema = new Schema(
     purpose: {
       type: String,
     },
+    usage: {
+      type: String,
+    },
     pics: [
       {
         type: String,

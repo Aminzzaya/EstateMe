@@ -2,7 +2,17 @@
 
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Modal, Select, message } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Modal,
+  Select,
+  message,
+  Spin,
+  ConfigProvider,
+} from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 import { PencilIcon, LaptopIcon } from "@/components/Icons";
 
 export default function Dashboard() {
@@ -12,7 +22,8 @@ export default function Dashboard() {
 
   const [registerModalOpen, setRegisterModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadingBtn, setLoadingBtn] = useState(false);
 
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [profilePreview, setProfilePreview] = useState(null);
@@ -43,6 +54,8 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error("Алдаа: Хэрэглэгчийн мэдээлэл BE:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -73,7 +86,7 @@ export default function Dashboard() {
   };
 
   const handleSubmit = async (values) => {
-    setLoading(true);
+    setLoadingBtn(true);
     const { password, lastName, firstName, email, phoneNumber, employeeType } =
       values;
     try {
@@ -130,7 +143,7 @@ export default function Dashboard() {
     } catch (error) {
       console.error("Алдаа: Хэрэглэгчийн мэдээлэл BE:", error);
     } finally {
-      setLoading(false);
+      setLoadingBtn(false);
       createform.resetFields();
       setProfilePreview(null);
     }
@@ -171,320 +184,352 @@ export default function Dashboard() {
   };
 
   return (
-    <main className="px-12 py-8">
-      <div className="pt-5">
-        <Button
-          className="border-[#008cc7] text-[#008cc7]"
-          onClick={() => setRegisterModalOpen(true)}
+    <>
+      {loading ? (
+        <ConfigProvider
+          theme={{
+            token: {
+              colorBgMask: "transparent",
+            },
+          }}
         >
-          + Ажилтан бүртгэх
-        </Button>
-      </div>
-      <div className="pt-6 pb-4">
-        <p className="font-semibold text-[15px] text-[#008cc7]">
-          АЖИЛЧДЫН ЖАГСААЛТ
-        </p>
-      </div>
-      <div className="page-content pt-6 pb-1">
-        <div className="grid grid-cols-12 gap-8 px-6">
-          <div className="col-span-2">
-            <p className="font-medium">Овог, нэр</p>
+          <Spin
+            fullscreen
+            wrapperClassName="spin"
+            indicator={
+              <LoadingOutlined
+                style={{
+                  fontSize: 24,
+                }}
+                spin
+              />
+            }
+          />
+        </ConfigProvider>
+      ) : (
+        <main className="px-12 py-8">
+          <div className="pt-5">
+            <Button
+              className="border-[#008cc7] text-[#008cc7]"
+              onClick={() => setRegisterModalOpen(true)}
+            >
+              + Ажилтан бүртгэх
+            </Button>
           </div>
-          <div className="col-span-2">
-            <p className="font-medium">Албан тушаал</p>
+          <div className="pt-6 pb-4">
+            <p className="font-semibold text-[15px] text-[#008cc7]">
+              АЖИЛЧДЫН ЖАГСААЛТ
+            </p>
           </div>
-          <div className="col-span-3">
-            <p className="font-medium text-center">И-мейл</p>
-          </div>
-          <div className="col-span-2">
-            <p className="font-medium text-center">Утасны дугаар</p>
-          </div>
-          <div className="col-span-2">
-            <p className="font-medium text-center">Төлөв</p>
-          </div>
-          <div className="col-span-1">
-            <p className="font-medium text-center"></p>
-          </div>
-        </div>
-        <div className="border-b border-1 pt-4"></div>
-        <div className="grid grid-cols-12 gap-4 pt-4 items-center">
-          {employees.map((employee, index) => (
-            <div key={employee.employeeId} className="col-span-12">
-              <div className="grid grid-cols-12 gap-8 items-center px-6 pb-3">
-                <div className="col-span-2 flex items-center">
-                  <img
-                    src={employee.profilePicture || "/images/profile.png"}
-                    alt="Agent"
-                    className="profile w-9 h-9"
-                  />
-
-                  <p className="pl-4">
-                    {employee.firstName} {employee.lastName.slice(0, 1)}.
-                  </p>
-                </div>
-                <div className="col-span-2">
-                  <p>{employee.employeeTypeName}</p>
-                </div>
-                <div className="col-span-3">
-                  <p className="text-center">{employee.email}</p>
-                </div>
-                <div className="col-span-2">
-                  <p className="text-center">{employee.phoneNumber}</p>
-                </div>
-                <div className="flex justify-center col-span-2">
-                  <p
-                    className={`p-1 px-3 rounded-lg text-center ${
-                      employee.status === "Идэвхтэй"
-                        ? "bg-[#008cc7] text-white"
-                        : "bg-gray-100"
-                    }`}
-                  >
-                    {employee.status}
-                  </p>
-                </div>
-                <div
-                  className="flex justify-center col-span-1 text-[#008cc7] bg-gray-100 rounded-lg py-1 cursor-pointer"
-                  onClick={() => handleEdit(employee)}
-                >
-                  <PencilIcon />
-                </div>
+          <div className="page-content pt-6 pb-1">
+            <div className="grid grid-cols-12 gap-8 px-6">
+              <div className="col-span-2">
+                <p className="font-medium">Овог, нэр</p>
               </div>
-              {index !== employees.length - 1 && (
-                <div className="border-b border-1"></div>
-              )}
+              <div className="col-span-2">
+                <p className="font-medium">Албан тушаал</p>
+              </div>
+              <div className="col-span-3">
+                <p className="font-medium text-center">И-мейл</p>
+              </div>
+              <div className="col-span-2">
+                <p className="font-medium text-center">Утасны дугаар</p>
+              </div>
+              <div className="col-span-2">
+                <p className="font-medium text-center">Төлөв</p>
+              </div>
+              <div className="col-span-1">
+                <p className="font-medium text-center"></p>
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
-      <Modal
-        title="Ажилтны бүртгэл"
-        open={registerModalOpen}
-        onCancel={() => setRegisterModalOpen(false)}
-        footer={null}
-      >
-        <div className="flex justify-center">
-          <div className="border rounded-full w-28 h-28">
-            <img src={profilePreview} className="profile w-28 h-28"></img>
-          </div>
-        </div>
-        <div className="bg-gray-100 p-2 mx-16 mt-3 rounded-lg">
-          <input type="file" accept="image/*" onChange={onProfileChange} />
-        </div>
+            <div className="border-b border-1 pt-4"></div>
+            <div className="grid grid-cols-12 gap-4 pt-4 items-center">
+              {employees.map((employee, index) => (
+                <div key={employee.employeeId} className="col-span-12">
+                  <div className="grid grid-cols-12 gap-8 items-center px-6 pb-3">
+                    <div className="col-span-2 flex items-center">
+                      <img
+                        src={employee.profilePicture || "/images/profile.png"}
+                        alt="Agent"
+                        className="profile w-9 h-9"
+                      />
 
-        <div className="flex justify-center pt-4">
-          <p>
-            Үүсгэсэн ажилтны код:{" "}
-            <span className="font-semibold">{employeeId}</span>
-          </p>
-        </div>
-
-        <Form
-          form={createform}
-          className="pt-4"
-          layout={"vertical"}
-          onFinish={handleSubmit}
-          autoComplete="off"
-        >
-          <div className="flex flex-wrap">
-            <div className="w-1/2 px-2">
-              <Form.Item
-                label="Овог"
-                name="lastName"
-                rules={[
-                  {
-                    required: true,
-                    message: "Утга оруулна уу!",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </div>
-            <div className="w-1/2 px-2">
-              <Form.Item
-                label="Нэр"
-                name="firstName"
-                rules={[
-                  {
-                    required: true,
-                    message: "Утга оруулна уу!",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
+                      <p className="pl-4">
+                        {employee.firstName} {employee.lastName.slice(0, 1)}.
+                      </p>
+                    </div>
+                    <div className="col-span-2">
+                      <p>{employee.employeeTypeName}</p>
+                    </div>
+                    <div className="col-span-3">
+                      <p className="text-center">{employee.email}</p>
+                    </div>
+                    <div className="col-span-2">
+                      <p className="text-center">{employee.phoneNumber}</p>
+                    </div>
+                    <div className="flex justify-center col-span-2">
+                      <p
+                        className={`p-1 px-3 rounded-lg text-center ${
+                          employee.status === "Идэвхтэй"
+                            ? "bg-[#008cc7] text-white"
+                            : "bg-gray-100"
+                        }`}
+                      >
+                        {employee.status}
+                      </p>
+                    </div>
+                    <div
+                      className="flex justify-center col-span-1 text-[#008cc7] bg-gray-100 rounded-lg py-1 cursor-pointer"
+                      onClick={() => handleEdit(employee)}
+                    >
+                      <PencilIcon />
+                    </div>
+                  </div>
+                  {index !== employees.length - 1 && (
+                    <div className="border-b border-1"></div>
+                  )}
+                </div>
+              ))}
             </div>
           </div>
-          <div className="flex flex-wrap">
-            <div className="w-full px-2">
-              <Form.Item
-                label="И-мейл"
-                name="email"
-                rules={[
-                  {
-                    required: true,
-                    message: "Утга оруулна уу!",
-                  },
-                ]}
-              >
-                <Input />
-              </Form.Item>
-            </div>
-            <div className="w-full px-2">
-              <Form.Item
-                label="Утасны дугаар"
-                name="phoneNumber"
-                rules={[
-                  {
-                    required: true,
-                    message: "Утга оруулна уу!",
-                  },
-                ]}
-              >
-                <Input maxLength={8} />
-              </Form.Item>
-            </div>
-          </div>
-          <div className="flex flex-wrap">
-            <div className="w-full px-2">
-              <Form.Item
-                label="Албан тушаал"
-                name="employeeType"
-                rules={[
-                  {
-                    required: true,
-                    message: "Сонголт хийнэ үү!",
-                  },
-                ]}
-              >
-                <Select placeholder="Сонгох">
-                  <Option value="1">Хэлтсийн захирал</Option>
-                  <Option value="2">Менежер</Option>
-                  <Option value="3">Агент</Option>
-                </Select>
-              </Form.Item>
-            </div>
-            <div className="w-full px-2">
-              <Form.Item
-                label="Нууц үг"
-                name="password"
-                rules={[
-                  {
-                    required: true,
-                    message: "Утга оруулна уу!",
-                  },
-                ]}
-              >
-                <Input.Password placeholder="Нууц үг" />
-              </Form.Item>
-            </div>
-          </div>
-          <div className="flex justify-end px-2 pt-2">
-            <Form.Item>
-              <Button onClick={() => setRegisterModalOpen(false)}>Буцах</Button>
-              <Button
-                loading={loading}
-                className="border-white bg-green-600 text-white ml-2 ant-btn-submit"
-                htmlType="submit"
-              >
-                Хадгалах
-              </Button>
-            </Form.Item>
-          </div>
-        </Form>
-        
-      </Modal>
-      {selectedEmployee && (
-        <Modal
-          title="Мэдээлэл засах"
-          open={editModalOpen}
-          onCancel={() => setEditModalOpen(false)}
-          footer={null}
-        >
-          <div className="flex justify-center">
-            <div className="border rounded-full w-28 h-28">
-              <img
-                src={selectedEmployee.profilePicture || "/images/profile.png"}
-                className="profile w-28 h-28"
-              ></img>
-            </div>
-          </div>
-          <p className="text-center pt-4">
-            <span className="font-semibold">{selectedEmployee.firstName}</span>{" "}
-            {selectedEmployee.lastName}
-          </p>
-          <div className="flex justify-center items-center gap-2">
-            <div className="pt-2 text-[#008cc7]">
-              <LaptopIcon />
-            </div>
-
-            <p className="mt-2 text-center px-2 rounded-lg py-1 bg-[#008cc7] text-white">
-              {selectedEmployee.employeeTypeName}
-            </p>
-          </div>
-
-          <div className="flex justify-center pt-2">
-            <p>
-              Ажилтны код:{" "}
-              <span className="font-semibold">
-                {selectedEmployee.employeeId}
-              </span>
-            </p>
-          </div>
-
-          <Form
-            form={form}
-            className="pt-4"
-            layout={"vertical"}
-            onFinish={handleEditSubmit}
-            autoComplete="off"
-            initialValues={selectedEmployee}
+          <Modal
+            title="Ажилтны бүртгэл"
+            open={registerModalOpen}
+            onCancel={() => setRegisterModalOpen(false)}
+            footer={null}
           >
-            <div className="flex flex-wrap">
-              <div className="w-1/2 px-2">
-                <Form.Item label="И-мейл" name="email">
-                  <Input />
-                </Form.Item>
-              </div>
-              <div className="w-1/2 px-2">
-                <Form.Item label="Утасны дугаар" name="phoneNumber">
-                  <Input />
-                </Form.Item>
+            <div className="flex justify-center">
+              <div className="border rounded-full w-28 h-28">
+                <img src={profilePreview} className="profile w-28 h-28"></img>
               </div>
             </div>
-            <div className="flex flex-wrap">
-              <div className="w-1/2 px-2">
-                <Form.Item label="Албан тушаал" name="employeeTypeName">
-                  <Select placeholder="Сонгох">
-                    <Option value="1">Хэлтсийн захирал</Option>
-                    <Option value="2">Менежер</Option>
-                    <Option value="3">Мэргэжилтэн</Option>
-                  </Select>
+            <div className="bg-gray-100 p-2 mx-16 mt-3 rounded-lg">
+              <input type="file" accept="image/*" onChange={onProfileChange} />
+            </div>
+
+            <div className="flex justify-center pt-4">
+              <p>
+                Үүсгэсэн ажилтны код:{" "}
+                <span className="font-semibold">{employeeId}</span>
+              </p>
+            </div>
+
+            <Form
+              form={createform}
+              className="pt-4"
+              layout={"vertical"}
+              onFinish={handleSubmit}
+              autoComplete="off"
+            >
+              <div className="flex flex-wrap">
+                <div className="w-1/2 px-2">
+                  <Form.Item
+                    label="Овог"
+                    name="lastName"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Утга оруулна уу!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </div>
+                <div className="w-1/2 px-2">
+                  <Form.Item
+                    label="Нэр"
+                    name="firstName"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Утга оруулна уу!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </div>
+              </div>
+              <div className="flex flex-wrap">
+                <div className="w-full px-2">
+                  <Form.Item
+                    label="И-мейл"
+                    name="email"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Утга оруулна уу!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </div>
+                <div className="w-full px-2">
+                  <Form.Item
+                    label="Утасны дугаар"
+                    name="phoneNumber"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Утга оруулна уу!",
+                      },
+                    ]}
+                  >
+                    <Input maxLength={8} />
+                  </Form.Item>
+                </div>
+              </div>
+              <div className="flex flex-wrap">
+                <div className="w-full px-2">
+                  <Form.Item
+                    label="Албан тушаал"
+                    name="employeeType"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Сонголт хийнэ үү!",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Сонгох">
+                      <Option value="1">Хэлтсийн захирал</Option>
+                      <Option value="2">Менежер</Option>
+                      <Option value="3">Агент</Option>
+                    </Select>
+                  </Form.Item>
+                </div>
+                <div className="w-full px-2">
+                  <Form.Item
+                    label="Нууц үг"
+                    name="password"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Утга оруулна уу!",
+                      },
+                    ]}
+                  >
+                    <Input.Password placeholder="Нууц үг" />
+                  </Form.Item>
+                </div>
+              </div>
+              <div className="flex justify-end px-2 pt-2">
+                <Form.Item>
+                  <Button onClick={() => setRegisterModalOpen(false)}>
+                    Буцах
+                  </Button>
+                  <Button
+                    loading={loadingBtn}
+                    className="border-white bg-green-600 text-white ml-2 ant-btn-submit"
+                    htmlType="submit"
+                  >
+                    Хадгалах
+                  </Button>
                 </Form.Item>
               </div>
-              <div className="w-1/2 px-2">
-                <Form.Item label="Төлөв" name="status">
-                  <Select>
-                    <Option value="Идэвхтэй">Идэвхтэй</Option>
-                    <Option value="Идэвхгүй">Идэвхгүй</Option>
-                  </Select>
-                </Form.Item>
+            </Form>
+          </Modal>
+          {selectedEmployee && (
+            <Modal
+              title="Мэдээлэл засах"
+              open={editModalOpen}
+              onCancel={() => setEditModalOpen(false)}
+              footer={null}
+            >
+              <div className="flex justify-center">
+                <div className="border rounded-full w-28 h-28">
+                  <img
+                    src={
+                      selectedEmployee.profilePicture || "/images/profile.png"
+                    }
+                    className="profile w-28 h-28"
+                  ></img>
+                </div>
               </div>
-            </div>
-            <div className="flex justify-end px-2 pt-2">
-              <Form.Item>
-                <Button onClick={() => setEditModalOpen(false)}>Буцах</Button>
-                <Button
-                  className="border-white bg-green-600 text-white ml-2"
-                  htmlType="submit"
-                >
-                  Хадгалах
-                </Button>
-              </Form.Item>
-            </div>
-          </Form>
-        </Modal>
+              <p className="text-center pt-4">
+                <span className="font-semibold">
+                  {selectedEmployee.firstName}
+                </span>{" "}
+                {selectedEmployee.lastName}
+              </p>
+              <div className="flex justify-center items-center gap-2">
+                <div className="pt-2 text-[#008cc7]">
+                  <LaptopIcon />
+                </div>
+
+                <p className="mt-2 text-center px-2 rounded-lg py-1 bg-[#008cc7] text-white">
+                  {selectedEmployee.employeeTypeName}
+                </p>
+              </div>
+
+              <div className="flex justify-center pt-2">
+                <p>
+                  Ажилтны код:{" "}
+                  <span className="font-semibold">
+                    {selectedEmployee.employeeId}
+                  </span>
+                </p>
+              </div>
+
+              <Form
+                form={form}
+                className="pt-4"
+                layout={"vertical"}
+                onFinish={handleEditSubmit}
+                autoComplete="off"
+                initialValues={selectedEmployee}
+              >
+                <div className="flex flex-wrap">
+                  <div className="w-1/2 px-2">
+                    <Form.Item label="И-мейл" name="email">
+                      <Input />
+                    </Form.Item>
+                  </div>
+                  <div className="w-1/2 px-2">
+                    <Form.Item label="Утасны дугаар" name="phoneNumber">
+                      <Input />
+                    </Form.Item>
+                  </div>
+                </div>
+                <div className="flex flex-wrap">
+                  <div className="w-1/2 px-2">
+                    <Form.Item label="Албан тушаал" name="employeeTypeName">
+                      <Select placeholder="Сонгох">
+                        <Option value="1">Хэлтсийн захирал</Option>
+                        <Option value="2">Менежер</Option>
+                        <Option value="3">Мэргэжилтэн</Option>
+                      </Select>
+                    </Form.Item>
+                  </div>
+                  <div className="w-1/2 px-2">
+                    <Form.Item label="Төлөв" name="status">
+                      <Select>
+                        <Option value="Идэвхтэй">Идэвхтэй</Option>
+                        <Option value="Идэвхгүй">Идэвхгүй</Option>
+                      </Select>
+                    </Form.Item>
+                  </div>
+                </div>
+                <div className="flex justify-end px-2 pt-2">
+                  <Form.Item>
+                    <Button onClick={() => setEditModalOpen(false)}>
+                      Буцах
+                    </Button>
+                    <Button
+                      className="border-white bg-green-600 text-white ml-2"
+                      htmlType="submit"
+                    >
+                      Хадгалах
+                    </Button>
+                  </Form.Item>
+                </div>
+              </Form>
+            </Modal>
+          )}
+        </main>
       )}
-    </main>
+    </>
   );
 }

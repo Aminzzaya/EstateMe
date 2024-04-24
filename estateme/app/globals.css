@@ -100,6 +100,7 @@ div {
 
 .ant-form-item .ant-form-item-explain-error {
   font-size: 11px;
+  margin-top: 2px;
 }
 
 .carousel-img {
@@ -121,4 +122,3 @@ div {
 .btn-back:hover svg path {
   fill: white !important;
 }
-
