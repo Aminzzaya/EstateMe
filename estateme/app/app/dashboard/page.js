@@ -170,7 +170,7 @@ export default function Dashboard() {
           </Tooltip>
           <Tooltip title="Устгах">
             <Button
-              className="text-[#008cc7]"
+              className="text-[#008CC7]"
               type="link"
               onClick={() => {
                 setSelectedProperty(property);
@@ -667,7 +667,7 @@ export default function Dashboard() {
               onCancel={() => setDeleteModalOpen(false)}
               cancelText="Буцах"
               okText="Устгах"
-              okButtonProps={{ style: { backgroundColor: "red" } }}
+              okButtonProps={{ style: { backgroundColor: "#DC2626" } }}
               onOk={() => deleteProperty(selectedProperty.propertyId)}
             >
               <div>
