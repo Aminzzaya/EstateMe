@@ -1379,8 +1379,9 @@ export default function Dashboard() {
           )}
           {current == 4 && (
             <div className="page-content p-6 px-10 pt-8">
-              <p>Зураг хавсаргах</p>
+              
               <div className="grid grid-cols-5 pt-2 pb-6 gap-6">
+              <p className="flex items-center font-medium">Зураг хавсаргах</p>
                 {selectedImages.map((image, index) => (
                   <div
                     key={index}
@@ -1455,7 +1456,7 @@ export default function Dashboard() {
                 <Button
                   loading={loading}
                   htmlType="submit"
-                  className="text-white bg-green-600 border-none"
+                  className="text-white bg-green-600 border-none ant-btn-submit"
                   onClick={handleSubmit}
                 >
                   Хадгалах
