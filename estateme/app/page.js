@@ -40,10 +40,10 @@ export default function Home() {
   };
   return (
     <main className="flex flex-col items-center justify-between p-24 background">
-      <div className="text-center bg-transparent backdrop-blur px-24 rounded-3xl mt-8">
+      <div className="text-center bg-white backdrop-blur px-20 rounded-2xl mt-8">
         <div className="flex justify-center items-center pt-11">
           <img
-            src="/images/logo.png"
+            src="/images/logoblue.png"
             width="150px"
             className="text-center"
           ></img>

@@ -61,7 +61,8 @@ div {
 }
 
 .signin .ant-form-item .ant-form-item-label > label {
-  color: white;
+  color: #008cc7;
+  font-weight:500;
 }
 
 .ant-btn-default:hover {
