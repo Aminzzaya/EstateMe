@@ -79,7 +79,7 @@ export default function Sidebar() {
               />
             </div>
           </div>
-          <div className="pt-6">
+          <div className="pt-4">
             <p className="text-[#008cc7]">Тавтай морил</p>
             <div className="leading-4 pt-3 font-medium">
               <p>{user.firstName}</p>

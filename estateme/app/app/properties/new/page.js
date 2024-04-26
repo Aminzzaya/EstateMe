@@ -443,7 +443,7 @@ export default function Dashboard() {
           </p>
         </div>
         <div>
-          <div className="flex gap-24">
+          <div className="flex gap-24 px-16">
             <div className="flex-1">
               <Form.Item label="ҮХХ-ийн дугаар">
                 <div className="pr">{propertyId}</div>
@@ -602,7 +602,7 @@ export default function Dashboard() {
               <div className="w-full px-2">
                 <Form.Item
                   labelCol={{ span: 10 }}
-                  label="И-мейл"
+                  label="Цахим шуудан"
                   name="email"
                   rules={[
                     {
@@ -765,7 +765,7 @@ export default function Dashboard() {
                     label="Хотын төв"
                     name="distanceToDowntown"
                   >
-                    <Input addonAfter="км" />
+                    <InputNumber min={0} placeholder="0" addonAfter="км" />
                   </Form.Item>
                 </div>
                 <div className="w-1/2 px-24">
@@ -774,7 +774,7 @@ export default function Dashboard() {
                     label="Хамгийн ойр сургууль"
                     name="distanceToSchool"
                   >
-                    <Input addonAfter="км" />
+                    <InputNumber min={0} placeholder="0" addonAfter="км" />
                   </Form.Item>
                 </div>
               </div>
@@ -785,7 +785,7 @@ export default function Dashboard() {
                     label="Хамгийн ойр их сургууль"
                     name="distanceToUniversity"
                   >
-                    <Input addonAfter="км" />
+                    <InputNumber min={0} placeholder="0" addonAfter="км" />
                   </Form.Item>
                 </div>
                 <div className="w-1/2 px-24">
@@ -794,7 +794,7 @@ export default function Dashboard() {
                     label="Хамгийн ойр цэцэрлэг"
                     name="distanceToKindergarten"
                   >
-                    <Input addonAfter="км" />
+                   <InputNumber min={0} placeholder="0" addonAfter="км" />
                   </Form.Item>
                 </div>
               </div>
@@ -1075,7 +1075,7 @@ export default function Dashboard() {
                         label="Зогсоолын үнэ"
                         name="garagePrice"
                       >
-                        <InputNumber min={0} placeholder="0" addonAfter="₮" />
+                        <InputNumber min={0} formatter={priceFormatter} placeholder="0" addonAfter="₮" />
                       </Form.Item>
                     </div>
                   </div>
@@ -1216,25 +1216,33 @@ export default function Dashboard() {
                   <div className="border-b border-1 mb-6"></div>
                   <div className="grid grid-cols-2 gap-12 pr-14">
                     <div className="col-span-1">
-                      <Form.Item
+                    <Form.Item
                         labelCol={{ span: 20 }}
-                        label="Төвийн шугамд холбогдсон эсэх"
                         name="isCentralWaterSupplies"
                         valuePropName="checked"
                         initialValue={false}
                       >
-                        <Checkbox />
+                        <div className="flex items-center">
+                          <Checkbox />
+                          <span className="pl-3">
+                            Төвийн шугамд холбогдсон эсэх
+                          </span>
+                        </div>
                       </Form.Item>
                     </div>
                     <div className="col-span-1">
-                      <Form.Item
-                        labelCol={{ span: 18 }}
-                        label="Нэмэлт цахилгааны эх үүсвэртэй эсэх"
+                    <Form.Item
+                        labelCol={{ span: 20 }}
                         name="isAdditionalPowerSupplies"
                         valuePropName="checked"
                         initialValue={false}
                       >
-                        <Checkbox />
+                        <div className="flex items-center">
+                          <Checkbox />
+                          <span className="pl-3">
+                            Цахилгааны эх үүсвэртэй эсэх
+                          </span>
+                        </div>
                       </Form.Item>
                     </div>
                   </div>
@@ -1371,8 +1379,9 @@ export default function Dashboard() {
           )}
           {current == 4 && (
             <div className="page-content p-6 px-10 pt-8">
-              <p>Зураг хавсаргах</p>
+              
               <div className="grid grid-cols-5 pt-2 pb-6 gap-6">
+              <p className="flex items-center font-medium">Зураг хавсаргах</p>
                 {selectedImages.map((image, index) => (
                   <div
                     key={index}
@@ -1447,7 +1456,7 @@ export default function Dashboard() {
                 <Button
                   loading={loading}
                   htmlType="submit"
-                  className="text-white bg-green-600 border-none"
+                  className="text-white bg-green-600 border-none ant-btn-submit"
                   onClick={handleSubmit}
                 >
                   Хадгалах

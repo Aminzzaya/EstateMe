@@ -245,7 +245,7 @@ export default function Dashboard() {
           </>
           {propertyModalOpen && selectedProperty && (
             <Modal
-              title={`ҮХХ-ийн мэдээлэл / ${selectedProperty.propertyId}`}
+              title={`Үл хөдлөх хөрөнгийн дэлгэрэнгүй мэдээлэл / ${selectedProperty.propertyId}`}
               open={propertyModalOpen}
               onCancel={() => setPropertyModalOpen(false)}
               width={620}
@@ -286,7 +286,7 @@ export default function Dashboard() {
                     <>
                       <div className="uppercase font-semibold">
                         {selectedProperty.buildingName},{" "}
-                        {selectedProperty.apartmentFloor} давхар
+                        {selectedProperty.apartmentFloor} давхарт
                       </div>
                       <div className="bg-gray-100 px-2 py-1 rounded-xl flex items-center gap-2 text-gray-600">
                         <PropertyIcon />
@@ -368,7 +368,7 @@ export default function Dashboard() {
                       </p>
                       {selectedProperty.ceilingHeight && (
                         <p className="w-1/2 text-start">
-                          Таазны өндөр: {selectedProperty.ceilingHeight} метр
+                          Таазны өндөр: {selectedProperty.ceilingHeight} м
                         </p>
                       )}
                     </div>
@@ -386,22 +386,22 @@ export default function Dashboard() {
                             {selectedProperty.numOfBathroom} угаалгын өрөө
                           </p>
                         </div>
-                        <div className="border-b pt-4"></div>
                       </>
                     )}
                     {selectedProperty.numOfWindow && (
                       <div className="flex gap-2 pt-3 -ml-[5px]">
                         <p className="bg-gray-100 px-2 py-1 rounded-xl">
-                          {selectedProperty.numOfWindow} цонхтой
+                          {selectedProperty.numOfWindow} цонх
                         </p>
                         <p className="bg-gray-100 px-2 py-1 rounded-xl">
-                          {selectedProperty.numOfEntry} орцтой
+                          {selectedProperty.numOfEntry} орц
                         </p>
                         <p className="bg-gray-100 px-2 py-1 rounded-xl">
-                          {selectedProperty.numOfExit} гарцтай
+                          {selectedProperty.numOfExit} гарц
                         </p>
                       </div>
                     )}
+                    <div className="border-b pt-4"></div>
                     {selectedProperty.buildingMaterial && (
                       <p className="pt-3">
                         Барилгын материал: {selectedProperty.buildingMaterial}
@@ -415,7 +415,7 @@ export default function Dashboard() {
                     {selectedProperty.earthquakeResistance && (
                       <p className="pt-3">
                         Газар хөдлөлтийн тэсвэр:{" "}
-                        {selectedProperty.earthquakeResistance} мт
+                        {selectedProperty.earthquakeResistance} магнитуд
                       </p>
                     )}
                   </div>

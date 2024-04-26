@@ -240,7 +240,7 @@ export default function Dashboard() {
           </Tooltip>
           <Tooltip title="Устгах">
             <Button
-              className="text-[#008cc7]"
+              className="text-[#008CC7]"
               type="link"
               onClick={() => {
                 setSelectedProperty(property);
@@ -256,8 +256,8 @@ export default function Dashboard() {
   ];
 
   const customLocale = {
-    triggerAsc: "Багаас нь их рүү ангилах",
-    triggerDesc: "Ихээс нь бага руу ангилах",
+    triggerAsc: "Багаас их рүү ангилах",
+    triggerDesc: "Ихээс бага руу ангилах",
     cancelSort: "Ангилсныг арилгах",
   };
 
@@ -405,43 +405,63 @@ export default function Dashboard() {
             <div className="col-span-2">
               <p className="font-semibold text-[15px] text-[#008cc7]">ГЭРЭЭ</p>
               <div className="page-content mt-4">
-                <div className="flex gap-5 items-center border-b p-4 cursor-pointer hover:bg-gray-100 rounded-t-xl">
+                <a
+                  href="https://res.cloudinary.com/estateme/image/upload/%D0%97%D1%83%D1%83%D1%87%D0%BB%D0%B0%D0%BB%D1%8B%D0%BD_%D0%B3%D1%8D%D1%80%D1%8D%D1%8D_ypw6mk.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex gap-5 items-center border-b p-4 cursor-pointer hover:bg-gray-100 rounded-t-xl"
+                >
                   <div className="text-[#008cc7]">
                     <DownloadIcon />
                   </div>
                   <p>Зуучлалын гэрээ</p>
-                </div>
-                <div className="flex gap-5 items-center border-b p-4 cursor-pointer hover:bg-gray-100">
+                </a>
+                <a
+                  href="https://res.cloudinary.com/estateme/image/upload/%D2%AE%D0%BB_%D1%85%D3%A9%D0%B4%D0%BB%D3%A9%D1%85_%D1%85%D3%A9%D1%80%D3%A9%D0%BD%D0%B3%D3%A9_%D0%B7%D1%83%D1%83%D1%87%D0%BB%D0%B0%D0%BB%D1%8B%D0%BD_%D0%BE%D0%BD%D1%86%D0%B3%D0%BE%D0%B8%CC%86_%D1%8D%D1%80%D1%85%D0%B8%D0%B8%CC%86%D0%BD_%D0%B3%D1%8D%D1%80%D1%8D%D1%8D_n9jmho.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex gap-5 items-center border-b p-4 cursor-pointer hover:bg-gray-100 rounded-t-xl"
+                >
                   <div className="text-[#008cc7]">
                     <DownloadIcon />
                   </div>
                   <p>Үл хөдлөх хөрөнгө зуучлалын онцгой эрхийн гэрээ</p>
-                </div>
-                <div className="flex gap-5 items-center border-b p-4 cursor-pointer hover:bg-gray-100">
+                </a>
+                <a
+                  href="https://res.cloudinary.com/estateme/image/upload/%D2%AE%D0%BB_%D1%85%D3%A9%D0%B4%D0%BB%D3%A9%D1%85_%D1%85%D3%A9%D1%80%D3%A9%D0%BD%D0%B3%D3%A9_%D1%85%D1%83%D0%B4%D0%B0%D0%BB%D0%B4%D0%B0%D1%85_%D1%85%D1%83%D0%B4%D0%B0%D0%BB%D0%B4%D0%B0%D0%BD_%D0%B0%D0%B2%D0%B0%D1%85_%D0%B3%D1%8D%D1%80%D1%8D%D1%8D_sqt9iu.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex gap-5 items-center border-b p-4 cursor-pointer hover:bg-gray-100 rounded-t-xl"
+                >
                   <div className="text-[#008cc7]">
                     <DownloadIcon />
                   </div>
                   <p>Үл хөдлөх хөрөнгө худалдах, худалдан авах гэрээ</p>
-                </div>
-                <div className="flex gap-5 items-center p-4 cursor-pointer hover:bg-gray-100 rounded-b-xl">
+                </a>
+                <a
+                  href="https://res.cloudinary.com/estateme/image/upload/%D2%AE%D0%BB_%D1%85%D3%A9%D0%B4%D0%BB%D3%A9%D1%85_%D1%85%D3%A9%D1%80%D3%A9%D0%BD%D0%B3%D3%A9_%D1%82%D2%AF%D1%80%D1%8D%D1%8D%D1%81%D0%B8%D0%B8%CC%86%D0%BD_%D0%B3%D1%8D%D1%80%D1%8D%D1%8D_px3qkh.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex gap-5 items-center border-b p-4 cursor-pointer hover:bg-gray-100 rounded-t-xl"
+                >
                   <div className="text-[#008cc7]">
                     <DownloadIcon />
                   </div>
                   <p>Үл хөдлөх хөрөнгө түрээсийн гэрээ</p>
-                </div>
+                </a>
               </div>
             </div>
             <div className="col-span-3 pl-12">
               <p className="font-semibold text-[15px] text-[#008cc7]">ГРАФИК</p>
               <p className="pl-[110px] py-2 font-medium">2024 оны I улирал</p>
-              <div className="h-[350px]">
+              <div className="h-[350px] max-w-[450px]">
                 <Doughnut options={options} data={doughnutData} />
               </div>
             </div>
           </div>
           {propertyModalOpen && selectedProperty && (
             <Modal
-              title={`ҮХХ-ийн мэдээлэл / ${selectedProperty.propertyId}`}
+              title={`Үл хөдлөх хөрөнгийн дэлгэрэнгүй мэдээлэл / ${selectedProperty.propertyId}`}
               open={propertyModalOpen}
               onCancel={() => setPropertyModalOpen(false)}
               width={620}
@@ -482,7 +502,7 @@ export default function Dashboard() {
                     <>
                       <div className="uppercase font-semibold">
                         {selectedProperty.buildingName},{" "}
-                        {selectedProperty.apartmentFloor} давхар
+                        {selectedProperty.apartmentFloor} давхарт
                       </div>
                       <div className="bg-gray-100 px-2 py-1 rounded-xl flex items-center gap-2 text-gray-600">
                         <PropertyIcon />
@@ -564,7 +584,7 @@ export default function Dashboard() {
                       </p>
                       {selectedProperty.ceilingHeight && (
                         <p className="w-1/2 text-start">
-                          Таазны өндөр: {selectedProperty.ceilingHeight} метр
+                          Таазны өндөр: {selectedProperty.ceilingHeight} м
                         </p>
                       )}
                     </div>
@@ -582,22 +602,22 @@ export default function Dashboard() {
                             {selectedProperty.numOfBathroom} угаалгын өрөө
                           </p>
                         </div>
-                        <div className="border-b pt-4"></div>
                       </>
                     )}
                     {selectedProperty.numOfWindow && (
                       <div className="flex gap-2 pt-3 -ml-[5px]">
                         <p className="bg-gray-100 px-2 py-1 rounded-xl">
-                          {selectedProperty.numOfWindow} цонхтой
+                          {selectedProperty.numOfWindow} цонх
                         </p>
                         <p className="bg-gray-100 px-2 py-1 rounded-xl">
-                          {selectedProperty.numOfEntry} орцтой
+                          {selectedProperty.numOfEntry} орц
                         </p>
                         <p className="bg-gray-100 px-2 py-1 rounded-xl">
-                          {selectedProperty.numOfExit} гарцтай
+                          {selectedProperty.numOfExit} гарц
                         </p>
                       </div>
                     )}
+                    <div className="border-b pt-4"></div>
                     {selectedProperty.buildingMaterial && (
                       <p className="pt-3">
                         Барилгын материал: {selectedProperty.buildingMaterial}
@@ -611,7 +631,7 @@ export default function Dashboard() {
                     {selectedProperty.earthquakeResistance && (
                       <p className="pt-3">
                         Газар хөдлөлтийн тэсвэр:{" "}
-                        {selectedProperty.earthquakeResistance} мт
+                        {selectedProperty.earthquakeResistance} магнитуд
                       </p>
                     )}
                   </div>
@@ -780,7 +800,7 @@ export default function Dashboard() {
               cancelText="Буцах"
               okText="Устгах"
               okButtonProps={{
-                style: { backgroundColor: "red" },
+                style: { backgroundColor: "#DC2626" },
                 loading: loadingBtn,
               }}
               onOk={() => deleteProperty(selectedProperty.propertyId)}
