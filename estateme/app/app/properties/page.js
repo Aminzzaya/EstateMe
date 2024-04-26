@@ -83,8 +83,16 @@ export default function Dashboard() {
     switch (statusName) {
       case "Бүртгэгдсэн":
         return "bg-blue-500 text-white px-2 py-1 rounded-xl";
+      case "Тохиролцсон":
+        return "bg-[#7C3AED] text-white px-2 py-1 rounded-xl";
       case "Гэрээ хийгдэж байгаа":
-        return "bg-green-500 text-white px-2 py-1 rounded-xl";
+        return "bg-[#FDE047] text-black px-2 py-1 rounded-xl text-center";
+      case "Худалдсан":
+        return "bg-[#22C55E] text-white px-2 py-1 rounded-xl";
+      case "Яаралтай":
+        return "bg-[#EA580C] text-white px-2 py-1 rounded-xl";
+      case "Цуцалсан":
+        return "bg-[#DC2626] text-white px-2 py-1 rounded-xl";
       default:
         return "";
     }
@@ -173,6 +181,14 @@ export default function Dashboard() {
     triggerAsc: "Багаас нь их рүү ангилах",
     triggerDesc: "Ихээс нь бага руу ангилах",
     cancelSort: "Ангилсныг арилгах",
+  };
+
+  const priceFormatter = (value) => {
+    if (!value) return "";
+    const formattedValue = value
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return `${formattedValue}`;
   };
 
   return (
@@ -437,7 +453,7 @@ export default function Dashboard() {
                       </p>
                       {selectedProperty.garagePrice && (
                         <p className="w-1/2 text-start">
-                          Үнэ: {selectedProperty.garagePrice}
+                          Үнэ: {priceFormatter(selectedProperty.garagePrice)}₮
                         </p>
                       )}
                     </div>
@@ -505,32 +521,38 @@ export default function Dashboard() {
                         {
                           key: "1",
                           name: "Дундаж үнэ",
-                          perSquareMeter: new Intl.NumberFormat("en-US").format(
-                            selectedProperty.unitAvgPrice
-                          ),
-                          total: new Intl.NumberFormat("en-US").format(
-                            selectedProperty.totalAvgPrice
-                          ),
+                          perSquareMeter:
+                            new Intl.NumberFormat("en-US").format(
+                              selectedProperty.unitAvgPrice
+                            ) + "₮",
+                          total:
+                            new Intl.NumberFormat("en-US").format(
+                              selectedProperty.totalAvgPrice
+                            ) + "₮",
                         },
                         {
                           key: "2",
                           name: "Дээд үнэ",
-                          perSquareMeter: new Intl.NumberFormat("en-US").format(
-                            selectedProperty.unitMaxPrice
-                          ),
-                          total: new Intl.NumberFormat("en-US").format(
-                            selectedProperty.totalMaxPrice
-                          ),
+                          perSquareMeter:
+                            new Intl.NumberFormat("en-US").format(
+                              selectedProperty.unitMaxPrice
+                            ) + "₮",
+                          total:
+                            new Intl.NumberFormat("en-US").format(
+                              selectedProperty.totalMaxPrice
+                            ) + "₮",
                         },
                         {
                           key: "3",
                           name: "Доод үнэ",
-                          perSquareMeter: new Intl.NumberFormat("en-US").format(
-                            selectedProperty.unitMinPrice
-                          ),
-                          total: new Intl.NumberFormat("en-US").format(
-                            selectedProperty.totalMinPrice
-                          ),
+                          perSquareMeter:
+                            new Intl.NumberFormat("en-US").format(
+                              selectedProperty.unitMinPrice
+                            ) + "₮",
+                          total:
+                            new Intl.NumberFormat("en-US").format(
+                              selectedProperty.totalMinPrice
+                            ) + "₮",
                         },
                       ]}
                       columns={[

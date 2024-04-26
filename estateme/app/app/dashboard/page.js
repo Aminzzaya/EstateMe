@@ -5,7 +5,7 @@ import "chart.js/auto";
 import React, { useState, useEffect } from "react";
 import {
   Form,
-  Input,
+  InputNumber,
   Button,
   Table,
   Spin,
@@ -14,6 +14,7 @@ import {
   Carousel,
   Tooltip,
   message,
+  Select,
 } from "antd";
 import {
   MapIcon,
@@ -27,15 +28,18 @@ import {
   TrashIcon,
   DateIcon,
   CarIcon,
+  EyeIcon,
 } from "@/components/Icons";
 import { Doughnut } from "react-chartjs-2";
 import { LoadingOutlined } from "@ant-design/icons";
 import Nav from "@/components/Nav";
 
 export default function Dashboard() {
+  const [form] = Form.useForm();
   const [properties, setProperties] = useState([]);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [propertyModalOpen, setPropertyModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [employeeId, setEmployeeId] = useState(null);
@@ -48,6 +52,10 @@ export default function Dashboard() {
       setEmployeeId(employee);
     }
   }, []);
+
+  useEffect(() => {
+    form.setFieldsValue(selectedProperty);
+  }, [selectedProperty]);
 
   const getProperties = async (employeeId) => {
     setLoading(true);
@@ -75,6 +83,45 @@ export default function Dashboard() {
     }
   };
 
+  const updateProperty = async ({ propertyId, formData }) => {
+    setLoadingBtn(true);
+    try {
+      if (isNaN(formData.statusName)) {
+        formData.statusName = selectedProperty.statusId;
+      }
+      const response = await fetch("/api/updateProperty", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          propertyId,
+          statusId: formData.statusName,
+          unitAvgPrice: formData.unitAvgPrice,
+          totalAvgPrice: formData.totalAvgPrice,
+          unitMaxPrice: formData.unitMaxPrice,
+          totalMaxPrice: formData.totalMaxPrice,
+          unitMinPrice: formData.unitMinPrice,
+          totalMinPrice: formData.totalMinPrice,
+        }),
+      });
+      if (response.ok) {
+        message.success("Амжилттай шинэчлэгдлээ!");
+        setEditModalOpen(false);
+        getProperties(employeeId);
+      } else {
+        console.error(
+          "Алдаа: Үл хөдлөх хөрөнгө шинэчлэх FE:",
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Алдаа: Үл хөдлөх хөрөнгө шинэчлэх BE:", error);
+    } finally {
+      setLoadingBtn(false);
+    }
+  };
+
   const deleteProperty = async (propertyId) => {
     setLoadingBtn(true);
     try {
@@ -98,7 +145,7 @@ export default function Dashboard() {
     } catch (error) {
       console.error("Алдаа: Үл хөдлөх хөрөнгө устгах BE:", error);
     } finally {
-      setLoading(false);
+      setLoadingBtn(false);
     }
   };
 
@@ -106,8 +153,16 @@ export default function Dashboard() {
     switch (statusName) {
       case "Бүртгэгдсэн":
         return "bg-blue-500 text-white px-2 py-1 rounded-xl";
+      case "Тохиролцсон":
+        return "bg-[#7C3AED] text-white px-2 py-1 rounded-xl";
       case "Гэрээ хийгдэж байгаа":
-        return "bg-green-500 text-white px-2 py-1 rounded-xl";
+        return "bg-[#FDE047] text-black px-2 py-1 rounded-xl";
+      case "Худалдсан":
+        return "bg-[#22C55E] text-white px-2 py-1 rounded-xl";
+      case "Яаралтай":
+        return "bg-[#EA580C] text-white px-2 py-1 rounded-xl";
+      case "Цуцалсан":
+        return "bg-[#DC2626] text-white px-2 py-1 rounded-xl";
       default:
         return "";
     }
@@ -123,6 +178,7 @@ export default function Dashboard() {
       title: "ҮХХ-ийн дугаар",
       dataIndex: "propertyId",
       defaultSortOrder: "descend",
+      width: 120,
       sorter: (a, b) => {
         const idA = parseInt(a.propertyId.substr(2), 10);
         const idB = parseInt(b.propertyId.substr(2), 10);
@@ -133,6 +189,7 @@ export default function Dashboard() {
       title: "Төрөл",
       dataIndex: "typeName",
       sorter: (a, b) => a.typeId - b.typeId,
+      width: 120,
     },
 
     {
@@ -144,6 +201,7 @@ export default function Dashboard() {
       title: "Төлөв",
       dataIndex: "statusName",
       sorter: (a, b) => a.statusId - b.statusId,
+      width: 160,
       render: (statusName) => (
         <div
           className={`status-cell text-center ${getStatusColor(statusName)}`}
@@ -156,13 +214,25 @@ export default function Dashboard() {
       title: "",
       render: (property) => (
         <>
-          <Tooltip title="Засварлах">
+          <Tooltip title="Дэлгэрэнгүй">
             <Button
               className="text-[#008cc7]"
               type="link"
               onClick={() => {
                 setSelectedProperty(property);
                 setPropertyModalOpen(true);
+              }}
+            >
+              <EyeIcon />
+            </Button>
+          </Tooltip>
+          <Tooltip title="Засварлах">
+            <Button
+              className="text-[#008cc7]"
+              type="link"
+              onClick={() => {
+                setSelectedProperty(property);
+                setEditModalOpen(true);
               }}
             >
               <PencilIcon />
@@ -252,6 +322,44 @@ export default function Dashboard() {
     ],
   };
 
+  const priceFormatter = (value) => {
+    if (!value) return "";
+    const formattedValue = value
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return `${formattedValue}`;
+  };
+
+  const setMaxPrice = (value) => {
+    const baseArea = form.getFieldValue("baseArea");
+    const minPrice = form.getFieldValue("unitMinPrice");
+
+    const totalMaxPrice = value * baseArea;
+    const unitAvgPrice = (value + minPrice) / 2;
+    const totalAvgPrice = unitAvgPrice * baseArea;
+
+    form.setFieldsValue({
+      totalMaxPrice,
+      unitAvgPrice,
+      totalAvgPrice,
+    });
+  };
+
+  const setMinPrice = (value) => {
+    const baseArea = form.getFieldValue("baseArea");
+    const maxPrice = form.getFieldValue("unitMaxPrice");
+
+    const totalMinPrice = value * baseArea;
+    const unitAvgPrice = (value + maxPrice) / 2;
+    const totalAvgPrice = unitAvgPrice * baseArea;
+
+    form.setFieldsValue({
+      totalMinPrice,
+      unitAvgPrice,
+      totalAvgPrice,
+    });
+  };
+
   return (
     <>
       {loading ? (
@@ -287,7 +395,7 @@ export default function Dashboard() {
             columns={columns}
             locale={customLocale}
             pagination={false}
-            //scroll={{ y: 240 }}
+            scroll={{ y: 240 }}
             dataSource={properties.map((property, index) => ({
               ...property,
               key: index,
@@ -338,9 +446,7 @@ export default function Dashboard() {
               onCancel={() => setPropertyModalOpen(false)}
               width={620}
               style={{ top: 40, bottom: 30 }}
-              cancelText="Буцах"
-              okText="Шинэчлэх"
-              okButtonProps={{ style: { backgroundColor: "green" } }}
+              footer={null}
             >
               <div>
                 <div className="pt-2 flex items-center gap-4">
@@ -543,7 +649,7 @@ export default function Dashboard() {
                       </p>
                       {selectedProperty.garagePrice && (
                         <p className="w-1/2 text-start">
-                          Үнэ: {selectedProperty.garagePrice}
+                          Үнэ: {priceFormatter(selectedProperty.garagePrice)}₮
                         </p>
                       )}
                     </div>
@@ -611,32 +717,38 @@ export default function Dashboard() {
                         {
                           key: "1",
                           name: "Дундаж үнэ",
-                          perSquareMeter: new Intl.NumberFormat("en-US").format(
-                            selectedProperty.unitAvgPrice
-                          ),
-                          total: new Intl.NumberFormat("en-US").format(
-                            selectedProperty.totalAvgPrice
-                          ),
+                          perSquareMeter:
+                            new Intl.NumberFormat("en-US").format(
+                              selectedProperty.unitAvgPrice
+                            ) + "₮",
+                          total:
+                            new Intl.NumberFormat("en-US").format(
+                              selectedProperty.totalAvgPrice
+                            ) + "₮",
                         },
                         {
                           key: "2",
                           name: "Дээд үнэ",
-                          perSquareMeter: new Intl.NumberFormat("en-US").format(
-                            selectedProperty.unitMaxPrice
-                          ),
-                          total: new Intl.NumberFormat("en-US").format(
-                            selectedProperty.totalMaxPrice
-                          ),
+                          perSquareMeter:
+                            new Intl.NumberFormat("en-US").format(
+                              selectedProperty.unitMaxPrice
+                            ) + "₮",
+                          total:
+                            new Intl.NumberFormat("en-US").format(
+                              selectedProperty.totalMaxPrice
+                            ) + "₮",
                         },
                         {
                           key: "3",
                           name: "Доод үнэ",
-                          perSquareMeter: new Intl.NumberFormat("en-US").format(
-                            selectedProperty.unitMinPrice
-                          ),
-                          total: new Intl.NumberFormat("en-US").format(
-                            selectedProperty.totalMinPrice
-                          ),
+                          perSquareMeter:
+                            new Intl.NumberFormat("en-US").format(
+                              selectedProperty.unitMinPrice
+                            ) + "₮",
+                          total:
+                            new Intl.NumberFormat("en-US").format(
+                              selectedProperty.totalMinPrice
+                            ) + "₮",
                         },
                       ]}
                       columns={[
@@ -667,7 +779,10 @@ export default function Dashboard() {
               onCancel={() => setDeleteModalOpen(false)}
               cancelText="Буцах"
               okText="Устгах"
-              okButtonProps={{ style: { backgroundColor: "red" } }}
+              okButtonProps={{
+                style: { backgroundColor: "red" },
+                loading: loadingBtn,
+              }}
               onOk={() => deleteProperty(selectedProperty.propertyId)}
             >
               <div>
@@ -682,6 +797,123 @@ export default function Dashboard() {
                   {selectedProperty.address} хаягтай,{" "}
                   {selectedProperty.ownerName} эзэмшигчтэй бүртгэлийг устгах уу?
                 </p>
+              </div>
+            </Modal>
+          )}
+          {editModalOpen && selectedProperty && (
+            <Modal
+              title="Мэдээлэл шинэчлэх"
+              open={editModalOpen}
+              onCancel={() => setEditModalOpen(false)}
+              cancelText="Буцах"
+              okText="Хадгалах"
+              okButtonProps={{
+                style: { backgroundColor: "green" },
+                loading: loadingBtn,
+              }}
+              onOk={() =>
+                updateProperty({
+                  propertyId: selectedProperty.propertyId,
+                  formData: form.getFieldsValue(),
+                })
+              }
+            >
+              <div>
+                <div className="pt-3 pb-4 flex items-center gap-3">
+                  <DateIcon />
+
+                  <p className="bg-gray-100 px-2 py-1 rounded-xl">
+                    Бүртгэсэн: {selectedProperty.createdAt.slice(0, 10)}
+                  </p>
+                  <p className="bg-gray-100 px-2 py-1 rounded-xl">
+                    Сүүлд шинэчилсэн: {selectedProperty.updatedAt.slice(0, 10)}
+                  </p>
+                </div>
+                <p className="text-justify pb-1 pt-2">
+                  ҮХХ-ийн дугаар: {selectedProperty.propertyId}
+                </p>
+                <Form
+                  form={form}
+                  initialValues={selectedProperty}
+                  className="pt-4"
+                >
+                  <Form.Item label="Төлөв" name="statusName">
+                    <Select placeholder="Сонгох">
+                      <Option value="1">Бүртгэгдсэн</Option>
+                      <Option value="2">Тохиролцсон</Option>
+                      <Option value="3">Гэрээ хийгдэж байгаа</Option>
+                      <Option value="4">Худалдсан</Option>
+                      <Option value="5">Яаралтай</Option>
+                      <Option value="6">Цуцалсан</Option>
+                    </Select>
+                  </Form.Item>
+                  <div className="grid grid-cols-5 gap-4 justify-items-center">
+                    <div className="col-span-3">
+                      <p className="flex justify-center font-semibold pb-5">
+                        1 м.кв
+                      </p>
+                      <Form.Item label="Дээд үнэ" name="unitMaxPrice">
+                        <InputNumber
+                          addonAfter="₮"
+                          onChange={setMaxPrice}
+                          formatter={priceFormatter}
+                        />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-2">
+                      <p className="flex justify-center font-semibold pb-5">
+                        Нийт
+                      </p>
+                      <Form.Item name="totalMaxPrice">
+                        <InputNumber
+                          addonAfter="₮"
+                          disabled
+                          formatter={priceFormatter}
+                        />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-5 gap-4 justify-items-center">
+                    <div className="col-span-3">
+                      <Form.Item label="Доод үнэ" name="unitMinPrice">
+                        <InputNumber
+                          addonAfter="₮"
+                          onChange={setMinPrice}
+                          formatter={priceFormatter}
+                        />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-2">
+                      <Form.Item name="totalMinPrice">
+                        <InputNumber
+                          addonAfter="₮"
+                          disabled
+                          formatter={priceFormatter}
+                        />
+                      </Form.Item>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-5 gap-4 justify-items-center">
+                    <div className="col-span-3">
+                      <Form.Item label="Дундаж үнэ" name="unitAvgPrice">
+                        <InputNumber
+                          addonAfter="₮"
+                          disabled
+                          formatter={priceFormatter}
+                        />
+                      </Form.Item>
+                    </div>
+                    <div className="col-span-2">
+                      <Form.Item name="totalAvgPrice">
+                        <InputNumber
+                          addonAfter="₮"
+                          disabled
+                          formatter={priceFormatter}
+                        />
+                      </Form.Item>
+                    </div>
+                  </div>
+                </Form>
               </div>
             </Modal>
           )}
