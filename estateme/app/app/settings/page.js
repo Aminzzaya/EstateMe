@@ -11,11 +11,14 @@ import {
   message,
   Spin,
   ConfigProvider,
+  Table,
+  Tooltip,
 } from "antd";
-import { LaptopIcon } from "@/components/Icons";
+import { LaptopIcon, PencilIcon } from "@/components/Icons";
 import { LoadingOutlined } from "@ant-design/icons";
 import { useSession } from "next-auth/react";
 import { SearchIcon, BellIcon } from "@/components/Icons";
+import Nav from "@/components/Nav";
 
 export default function Settings() {
   const [form] = Form.useForm();
@@ -25,6 +28,7 @@ export default function Settings() {
   const [loadingBtn, setLoadingBtn] = useState(false);
 
   const [user, setUser] = useState([]);
+  const [users, setUsers] = useState([]);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [profilePreview, setProfilePreview] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
@@ -51,6 +55,7 @@ export default function Settings() {
 
         if (data.user) {
           setUser(data.user[0]);
+          setUsers(data.user);
           setProfilePreview(data.user[0].profilePicture);
         } else {
           console.error("Хэрэглэгчийн дата олдсонгүй:", data.message);
@@ -79,9 +84,8 @@ export default function Settings() {
     }
   };
 
-  const handleEditSubmit = async (values) => {
+  const handleEditSubmit = async ({ formValues }) => {
     setLoadingBtn(true);
-    const { email, phoneNumber, password } = values;
     try {
       let pictureUrl = profilePreview;
 
@@ -114,9 +118,9 @@ export default function Settings() {
         },
         body: JSON.stringify({
           employeeId: user.employeeId,
-          email,
-          phoneNumber,
-          password,
+          email: formValues.email,
+          phoneNumber: formValues.phoneNumber,
+          password: formValues.password,
           profilePicture: pictureUrl,
         }),
       });
@@ -166,14 +170,7 @@ export default function Settings() {
                 <p className="font-semibold text-[15px] text-[#008cc7]">
                   МИНИЙ МЭДЭЭЛЭЛ
                 </p>
-                <div className="flex gap-3">
-                  <div className="w-8 h-8 p-[5px] bg-[#008cc7] text-white rounded-lg">
-                    <SearchIcon />
-                  </div>
-                  <div className="w-8 h-8 p-[5px] bg-[#008cc7] text-white rounded-lg">
-                    <BellIcon />
-                  </div>
-                </div>
+                <Nav />
               </div>
               <div className="flex gap-8 items-center">
                 <div>
@@ -197,7 +194,7 @@ export default function Settings() {
                   </div>
                 </div>
               </div>
-              <div className="inline-flex flex-col">
+              {/* <div className="inline-flex flex-col">
                 <div className="page-content-sm mt-6 p-4 px-6">
                   <div className="grid grid-cols-6 gap-7">
                     <div className="col-span-2">
@@ -243,6 +240,65 @@ export default function Settings() {
                     Мэдээлэл засах
                   </Button>
                 </div>
+              </div> */}
+              <div className="pb-1 pt-6">
+                <Table
+                  dataSource={users}
+                  rowKey="employeeId"
+                  pagination={false}
+                >
+                  <Table.Column
+                    title="Ажилтны код"
+                    dataIndex="firstName"
+                    key="firstName"
+                    render={(text, record) => <p>{record.employeeId}</p>}
+                  />
+                  <Table.Column
+                    title="Албан тушаал"
+                    dataIndex="employeeTypeName"
+                    key="employeeTypeName"
+                  />
+                  <Table.Column
+                    title="Цахим шуудан"
+                    dataIndex="email"
+                    key="email"
+                    align="center"
+                  />
+                  <Table.Column
+                    title="Утасны дугаар"
+                    dataIndex="phoneNumber"
+                    key="phoneNumber"
+                    align="center"
+                  />
+                  <Table.Column
+                    title="Нууц үг"
+                    dataIndex="status"
+                    key="status"
+                    align="center"
+                    render={(text, record) => (
+                      <Input.Password value={record.password} />
+                    )}
+                  />
+                  <Table.Column
+                    title=""
+                    dataIndex=""
+                    key="action"
+                    align="center"
+                    render={(text, record) => (
+                      <Tooltip title="Мэдээлэл засах">
+                        <Button
+                          className="text-[#008cc7]"
+                          type="link"
+                          onClick={() => {
+                            setEditModalOpen(true);
+                          }}
+                        >
+                          <PencilIcon />
+                        </Button>
+                      </Tooltip>
+                    )}
+                  />
+                </Table>
               </div>
             </>
           )}
@@ -250,7 +306,13 @@ export default function Settings() {
             title="Мэдээлэл засах"
             open={editModalOpen}
             onCancel={() => setEditModalOpen(false)}
-            footer={null}
+            cancelText="Буцах"
+            okText="Хадгалах"
+            okButtonProps={{
+              style: { backgroundColor: "green" },
+              loading: loadingBtn,
+            }}
+            onOk={() => handleEditSubmit({ formValues: form.getFieldsValue() })}
           >
             <div className="flex justify-center">
               <div className="border rounded-full w-28 h-28">
@@ -264,7 +326,6 @@ export default function Settings() {
               form={form}
               className="pt-4"
               layout={"vertical"}
-              onFinish={handleEditSubmit}
               autoComplete="off"
               initialValues={user}
             >
@@ -286,18 +347,6 @@ export default function Settings() {
                     <Input.Password />
                   </Form.Item>
                 </div>
-              </div>
-              <div className="flex justify-end px-2 pt-2">
-                <Form.Item>
-                  <Button onClick={() => setEditModalOpen(false)}>Буцах</Button>
-                  <Button
-                    loading={loadingBtn}
-                    className="border-white bg-green-600 text-white ml-2 ant-btn-submit"
-                    htmlType="submit"
-                  >
-                    Хадгалах
-                  </Button>
-                </Form.Item>
               </div>
             </Form>
           </Modal>

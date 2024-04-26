@@ -44,6 +44,7 @@ export default function Sidebar() {
         if (data.user) {
           setUser(data.user[0]);
           localStorage.setItem("user", JSON.stringify(data.user[0]));
+          localStorage.setItem("employeeType", data.user[0].employeeType);
           setEmployeeType(data.user[0].employeeType);
         } else {
           console.error("Хэрэглэгчийн дата олдсонгүй:", data.message);

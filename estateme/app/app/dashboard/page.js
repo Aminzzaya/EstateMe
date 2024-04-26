@@ -43,13 +43,16 @@ export default function Dashboard() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [employeeId, setEmployeeId] = useState(null);
+  const [employeeType, setEmployeeType] = useState(null);
   const [loadingBtn, setLoadingBtn] = useState(false);
 
   useEffect(() => {
     const employee = localStorage.getItem("employeeId");
+    const employeeType = localStorage.getItem("employeeType");
     if (employee) {
       getProperties(employee);
       setEmployeeId(employee);
+      setEmployeeType(employeeType);
     }
   }, []);
 
@@ -387,7 +390,9 @@ export default function Dashboard() {
         <main className="px-12 py-8">
           <div className="pt-6 pb-4 flex justify-between">
             <p className="font-semibold text-[15px] text-[#008cc7]">
-              МИНИЙ ЛИСТ
+              {employeeType == 3
+                ? "МИНИЙ ЛИСТ"
+                : "ПРОЦЕСС ЯВАГДАЖ БАЙГАА ЗУУЧЛАЛУУД"}
             </p>
             <Nav />
           </div>
@@ -420,7 +425,7 @@ export default function Dashboard() {
                   href="https://res.cloudinary.com/estateme/image/upload/%D2%AE%D0%BB_%D1%85%D3%A9%D0%B4%D0%BB%D3%A9%D1%85_%D1%85%D3%A9%D1%80%D3%A9%D0%BD%D0%B3%D3%A9_%D0%B7%D1%83%D1%83%D1%87%D0%BB%D0%B0%D0%BB%D1%8B%D0%BD_%D0%BE%D0%BD%D1%86%D0%B3%D0%BE%D0%B8%CC%86_%D1%8D%D1%80%D1%85%D0%B8%D0%B8%CC%86%D0%BD_%D0%B3%D1%8D%D1%80%D1%8D%D1%8D_n9jmho.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex gap-5 items-center border-b p-4 cursor-pointer hover:bg-gray-100 rounded-t-xl"
+                  className="flex gap-5 items-center border-b p-4 cursor-pointer hover:bg-gray-100"
                 >
                   <div className="text-[#008cc7]">
                     <DownloadIcon />
@@ -431,7 +436,7 @@ export default function Dashboard() {
                   href="https://res.cloudinary.com/estateme/image/upload/%D2%AE%D0%BB_%D1%85%D3%A9%D0%B4%D0%BB%D3%A9%D1%85_%D1%85%D3%A9%D1%80%D3%A9%D0%BD%D0%B3%D3%A9_%D1%85%D1%83%D0%B4%D0%B0%D0%BB%D0%B4%D0%B0%D1%85_%D1%85%D1%83%D0%B4%D0%B0%D0%BB%D0%B4%D0%B0%D0%BD_%D0%B0%D0%B2%D0%B0%D1%85_%D0%B3%D1%8D%D1%80%D1%8D%D1%8D_sqt9iu.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex gap-5 items-center border-b p-4 cursor-pointer hover:bg-gray-100 rounded-t-xl"
+                  className="flex gap-5 items-center border-b p-4 cursor-pointer hover:bg-gray-100"
                 >
                   <div className="text-[#008cc7]">
                     <DownloadIcon />
@@ -442,7 +447,7 @@ export default function Dashboard() {
                   href="https://res.cloudinary.com/estateme/image/upload/%D2%AE%D0%BB_%D1%85%D3%A9%D0%B4%D0%BB%D3%A9%D1%85_%D1%85%D3%A9%D1%80%D3%A9%D0%BD%D0%B3%D3%A9_%D1%82%D2%AF%D1%80%D1%8D%D1%8D%D1%81%D0%B8%D0%B8%CC%86%D0%BD_%D0%B3%D1%8D%D1%80%D1%8D%D1%8D_px3qkh.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex gap-5 items-center border-b p-4 cursor-pointer hover:bg-gray-100 rounded-t-xl"
+                  className="flex gap-5 items-center p-4 cursor-pointer hover:bg-gray-100 rounded-b-xl"
                 >
                   <div className="text-[#008cc7]">
                     <DownloadIcon />

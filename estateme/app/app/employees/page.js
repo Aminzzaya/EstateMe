@@ -11,9 +11,12 @@ import {
   message,
   Spin,
   ConfigProvider,
+  Table,
+  Tooltip,
 } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { PencilIcon, LaptopIcon } from "@/components/Icons";
+import Nav from "@/components/Nav";
 
 export default function Dashboard() {
   const { Option } = Select;
@@ -155,8 +158,11 @@ export default function Dashboard() {
   };
 
   const handleEditSubmit = async (values) => {
-    const { status, email, phoneNumber, employeeTypeName } = values;
+    let { status, email, phoneNumber, employeeTypeName } = values;
     try {
+      if (isNaN(employeeTypeName)) {
+        employeeTypeName = selectedEmployee.employeeType;
+      }
       const response = await fetch("/api/updateUserStatus", {
         method: "POST",
         headers: {
@@ -208,89 +214,100 @@ export default function Dashboard() {
         </ConfigProvider>
       ) : (
         <main className="px-12 py-8">
-          <div className="pt-5">
-            <Button
-              className="border-[#008cc7] text-[#008cc7]"
-              onClick={() => setRegisterModalOpen(true)}
-            >
-              + Ажилтан бүртгэх
-            </Button>
-          </div>
-          <div className="pt-6 pb-4">
+          <div className="pt-6 pb-4 flex justify-between">
             <p className="font-semibold text-[15px] text-[#008cc7]">
               АЖИЛЧДЫН ЖАГСААЛТ
             </p>
+            <Nav />
           </div>
-          <div className="page-content pt-6 pb-1">
-            <div className="grid grid-cols-12 gap-8 px-6">
-              <div className="col-span-2">
-                <p className="font-medium">Нэр, овог</p>
-              </div>
-              <div className="col-span-2">
-                <p className="font-medium">Албан тушаал</p>
-              </div>
-              <div className="col-span-3">
-                <p className="font-medium text-center">Цахим шуудан</p>
-              </div>
-              <div className="col-span-2">
-                <p className="font-medium text-center">Утасны дугаар</p>
-              </div>
-              <div className="col-span-2">
-                <p className="font-medium text-center">Төлөв</p>
-              </div>
-              <div className="col-span-1">
-                <p className="font-medium text-center"></p>
-              </div>
+          <div>
+            <div>
+              <Button
+                className="border-[#008cc7] text-[#008cc7]"
+                onClick={() => setRegisterModalOpen(true)}
+              >
+                + Ажилтан бүртгэх
+              </Button>
             </div>
-            <div className="border-b border-1 pt-4"></div>
-            <div className="grid grid-cols-12 gap-4 pt-4 items-center">
-              {employees.map((employee, index) => (
-                <div key={employee.employeeId} className="col-span-12">
-                  <div className="grid grid-cols-12 gap-8 items-center px-6 pb-3">
-                    <div className="col-span-2 flex items-center">
-                      <img
-                        src={employee.profilePicture || "/images/profile.png"}
-                        alt="Agent"
-                        className="profile w-9 h-9"
-                      />
-
-                      <p className="pl-4">
-                        {employee.firstName} {employee.lastName.slice(0, 1)}.
-                      </p>
-                    </div>
-                    <div className="col-span-2">
-                      <p>{employee.employeeTypeName}</p>
-                    </div>
-                    <div className="col-span-3">
-                      <p className="text-center">{employee.email}</p>
-                    </div>
-                    <div className="col-span-2">
-                      <p className="text-center">{employee.phoneNumber}</p>
-                    </div>
-                    <div className="flex justify-center col-span-2">
-                      <p
-                        className={`p-1 px-3 rounded-lg text-center ${
-                          employee.status === "Идэвхтэй"
-                            ? "bg-[#008cc7] text-white"
-                            : "bg-gray-100"
-                        }`}
-                      >
-                        {employee.status}
-                      </p>
-                    </div>
-                    <div
-                      className="flex justify-center col-span-1 text-[#008cc7] bg-gray-100 rounded-lg py-1 cursor-pointer"
-                      onClick={() => handleEdit(employee)}
+          </div>
+          <div className="pt-6"></div>
+          <div className="pb-1">
+            <Table
+              dataSource={employees}
+              rowKey="employeeId"
+              pagination={false}
+            >
+              <Table.Column
+                title="Нэр, овог"
+                dataIndex="firstName"
+                key="firstName"
+                render={(text, record) => (
+                  <div className="flex items-center">
+                    <img
+                      src={record.profilePicture || "/images/profile.png"}
+                      alt="Agent"
+                      className="profile w-9 h-9"
+                    />
+                    <p className="pl-4">
+                      {record.firstName} {record.lastName.slice(0, 1)}.
+                    </p>
+                  </div>
+                )}
+              />
+              <Table.Column
+                title="Албан тушаал"
+                dataIndex="employeeTypeName"
+                key="employeeTypeName"
+              />
+              <Table.Column
+                title="Цахим шуудан"
+                dataIndex="email"
+                key="email"
+                align="center"
+              />
+              <Table.Column
+                title="Утасны дугаар"
+                dataIndex="phoneNumber"
+                key="phoneNumber"
+                align="center"
+              />
+              <Table.Column
+                title="Төлөв"
+                dataIndex="status"
+                key="status"
+                align="center"
+                render={(text, record) => (
+                  <p
+                    className={`p-1 px-3 rounded-lg text-center ${
+                      record.status === "Идэвхтэй"
+                        ? "bg-[#008cc7] text-white"
+                        : "bg-gray-100"
+                    }`}
+                  >
+                    {record.status}
+                  </p>
+                )}
+              />
+              <Table.Column
+                title=""
+                dataIndex=""
+                key="action"
+                align="center"
+                render={(text, record) => (
+                  <Tooltip title="Засварлах">
+                    <Button
+                      className="text-[#008cc7]"
+                      type="link"
+                      onClick={() => {
+                        handleEdit(record);
+                      }}
                     >
                       <PencilIcon />
-                    </div>
-                  </div>
-                  {index !== employees.length - 1 && (
-                    <div className="border-b border-1"></div>
-                  )}
-                </div>
-              ))}
-            </div>
+                    </Button>
+                  </Tooltip>
+                )}
+              />
+            </Table>
           </div>
           <Modal
             title="Ажилтны бүртгэл"
