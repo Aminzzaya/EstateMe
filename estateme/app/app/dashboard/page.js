@@ -155,7 +155,7 @@ export default function Dashboard() {
   const getStatusColor = (statusName) => {
     switch (statusName) {
       case "Бүртгэгдсэн":
-        return "bg-blue-500 text-white px-2 py-1 rounded-xl";
+        return "bg-[#008CC7]  text-white px-2 py-1 rounded-xl";
       case "Тохиролцсон":
         return "bg-[#7C3AED] text-white px-2 py-1 rounded-xl";
       case "Гэрээ хийгдэж байгаа":
@@ -175,7 +175,7 @@ export default function Dashboard() {
     {
       title: "Эзэмшигч",
       dataIndex: "ownerName",
-      width: 150,
+      width: 130,
       sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
     },
     {
@@ -193,7 +193,7 @@ export default function Dashboard() {
       title: "Зорилго",
       dataIndex: "purpose",
       sorter: (a, b) => a.purpose - b.purpose,
-      width: 120,
+      width: 130,
     },
     {
       title: "Төрөл",
@@ -212,7 +212,7 @@ export default function Dashboard() {
       title: "Төлөв",
       dataIndex: "statusName",
       sorter: (a, b) => a.statusId - b.statusId,
-      width: 180,
+      width: 160,
       render: (statusName) => (
         <div
           className={`status-cell text-center ${getStatusColor(statusName)}`}
@@ -321,7 +321,7 @@ export default function Dashboard() {
       {
         data: data,
         backgroundColor: [
-          "#3B82F6",
+          "#008CC7",
           "#7C3AED",
           "#FDE047",
           "#22C55E",
@@ -404,16 +404,18 @@ export default function Dashboard() {
             </p>
             <Nav />
           </div>
+          <div className="page-content">
           <Table
             columns={columns}
             locale={customLocale}
             pagination={false}
-            scroll={{ y: 240 }}
+            scroll={{ y: 260 }}
             dataSource={properties.map((property, index) => ({
               ...property,
               key: index,
             }))}
           />
+          </div>
           <div className="grid grid-cols-5 pt-10 gap-16">
             <div className="col-span-2">
               <p className="font-semibold text-[15px] text-[#008cc7]">ГЭРЭЭ</p>

@@ -82,17 +82,17 @@ export default function Dashboard() {
   const getStatusColor = (statusName) => {
     switch (statusName) {
       case "Бүртгэгдсэн":
-        return "bg-blue-500 text-white px-2 py-1 rounded-xl";
+        return "bg-[#008CC7] text-white px-2 py-1 rounded-xl text-center";
       case "Тохиролцсон":
-        return "bg-[#7C3AED] text-white px-2 py-1 rounded-xl";
+        return "bg-[#7C3AED] text-white px-2 py-1 rounded-xl text-center";
       case "Гэрээ хийгдэж байгаа":
         return "bg-[#FDE047] text-black px-2 py-1 rounded-xl text-center";
       case "Худалдсан":
-        return "bg-[#22C55E] text-white px-2 py-1 rounded-xl";
+        return "bg-[#22C55E] text-white px-2 py-1 rounded-xl text-center";
       case "Яаралтай":
-        return "bg-[#EA580C] text-white px-2 py-1 rounded-xl";
+        return "bg-[#EA580C] text-white px-2 py-1 rounded-xl text-center";
       case "Цуцалсан":
-        return "bg-[#DC2626] text-white px-2 py-1 rounded-xl";
+        return "bg-[#DC2626] text-white px-2 py-1 rounded-xl text-center";
       default:
         return "";
     }
@@ -103,6 +103,7 @@ export default function Dashboard() {
       title: "ҮХХ-ийн дугаар",
       dataIndex: "propertyId",
       defaultSortOrder: "descend",
+      width: 120,
       sorter: (a, b) => {
         const idA = parseInt(a.propertyId.substr(2), 10);
         const idB = parseInt(b.propertyId.substr(2), 10);
@@ -110,29 +111,9 @@ export default function Dashboard() {
       },
     },
     {
-      title: "Бүртгэлийн огноо",
-      dataIndex: "createdAt",
-      render: (createdAt) => new Date(createdAt).toISOString().split("T")[0],
-      sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
-    },
-    {
-      title: "Зорилго",
-      dataIndex: "purpose",
-      sorter: (a, b) => a.purpose - b.purpose,
-    },
-    {
-      title: "Байршил",
-      dataIndex: "address",
-      sorter: (a, b) => b.districtId - a.districtId,
-    },
-    {
-      title: "Төрөл",
-      dataIndex: "typeName",
-      sorter: (a, b) => a.typeId - b.typeId,
-    },
-    {
       title: "Агент",
       dataIndex: "employee",
+      width: 120,
       sorter: (a, b) => {
         const idA = parseInt(a.employeeId.substr(1), 10);
         const idB = parseInt(b.employeeId.substr(1), 10);
@@ -140,8 +121,27 @@ export default function Dashboard() {
       },
     },
     {
+      title: "Зорилго",
+      dataIndex: "purpose",
+      width: 130,
+      sorter: (a, b) => a.purpose - b.purpose,
+    },
+    {
+      title: "Байршил",
+      dataIndex: "address",
+      width: 180,
+      sorter: (a, b) => b.districtId - a.districtId,
+    },
+    {
+      title: "Төрөл",
+      dataIndex: "typeName",
+      width: 110,
+      sorter: (a, b) => a.typeId - b.typeId,
+    },
+    {
       title: "Үнэ",
       dataIndex: "totalAvgPrice",
+      width: 140,
       render: (totalAvgPrice) => (
         <>
           {new Intl.NumberFormat("en-US").format(totalAvgPrice)}
@@ -153,6 +153,7 @@ export default function Dashboard() {
     {
       title: "Төлөв",
       dataIndex: "statusName",
+      width: 155,
       sorter: (a, b) => a.statusId - b.statusId,
       render: (statusName) => (
         <div className={`status-cell ${getStatusColor(statusName)}`}>
@@ -234,14 +235,16 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="pt-6"></div>
-            <Table
-              columns={columns}
-              locale={customLocale}
-              dataSource={properties.map((property, index) => ({
-                ...property,
-                key: index,
-              }))}
-            />
+            <div className="page-content overflow-auto max-h-[480px]">
+              <Table
+                columns={columns}
+                locale={customLocale}
+                dataSource={properties.map((property, index) => ({
+                  ...property,
+                  key: index,
+                }))}
+              />
+            </div>
           </>
           {propertyModalOpen && selectedProperty && (
             <Modal
@@ -309,8 +312,7 @@ export default function Dashboard() {
                     <MapIcon />
                   </div>
                   <div className="leading-5">
-                    <p>{selectedProperty.address}</p>
-                    <p>Зип код: {selectedProperty.zipCode}</p>
+                    <p>{selectedProperty.address}, {selectedProperty.zipCode}</p>
                   </div>
                 </div>
                 <div className="border-b pt-4 mx-10"></div>
@@ -358,7 +360,7 @@ export default function Dashboard() {
                           {selectedProperty.typeName}
                         </p>
                         <p className="w-1/2 text-start">
-                          ҮХХ: {selectedProperty.apartmentFloor} давхар
+                          ҮХХ: {selectedProperty.apartmentFloor} давхарт
                         </p>
                       </div>
                     )}
