@@ -178,8 +178,8 @@ export default function Dashboard() {
   ];
 
   const customLocale = {
-    triggerAsc: "Багаас нь их рүү ангилах",
-    triggerDesc: "Ихээс нь бага руу ангилах",
+    triggerAsc: "Багаас их рүү ангилах",
+    triggerDesc: "Ихээс бага руу ангилах",
     cancelSort: "Ангилсныг арилгах",
   };
 

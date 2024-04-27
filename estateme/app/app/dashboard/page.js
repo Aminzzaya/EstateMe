@@ -175,6 +175,7 @@ export default function Dashboard() {
     {
       title: "Эзэмшигч",
       dataIndex: "ownerName",
+      width: 150,
       sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
     },
     {
@@ -189,6 +190,12 @@ export default function Dashboard() {
       },
     },
     {
+      title: "Зорилго",
+      dataIndex: "purpose",
+      sorter: (a, b) => a.purpose - b.purpose,
+      width: 120,
+    },
+    {
       title: "Төрөл",
       dataIndex: "typeName",
       sorter: (a, b) => a.typeId - b.typeId,
@@ -199,12 +206,13 @@ export default function Dashboard() {
       title: "Байршил",
       dataIndex: "address",
       sorter: (a, b) => b.districtId - a.districtId,
+      width: 160,
     },
     {
       title: "Төлөв",
       dataIndex: "statusName",
       sorter: (a, b) => a.statusId - b.statusId,
-      width: 160,
+      width: 180,
       render: (statusName) => (
         <div
           className={`status-cell text-center ${getStatusColor(statusName)}`}
@@ -484,7 +492,7 @@ export default function Dashboard() {
                   </p>
                   <p>🧳 {selectedProperty.purpose}</p>
                   <div className="flex items-center gap-1 text-gray-600">
-                    <UserIcon />
+                    <p className="font-semibold">Агент:</p>
                     <p className="text-black">{selectedProperty.employee}</p>
                   </div>
                 </div>
@@ -524,14 +532,24 @@ export default function Dashboard() {
                   )}
                 </div>
 
+                <div className="font-semibold py-4 text-[#007cc8]">Эзэмшигч</div>
+                <div className="flex gap-4 items-center">
+                  <div className="text-gray-600">
+                    <UserIcon />
+                  </div>
+                  <div className="leading-5">
+                    <p>{selectedProperty.firstName} (<a href={`tel:${selectedProperty.phoneNumber}`}>{selectedProperty.phoneNumber}</a>)</p>
+                    <p className="pt-1">Цахим шуудан: <a href={`mailto:${selectedProperty.email}`} className="underline">{selectedProperty.email}</a></p>
+                  </div>
+                </div>
+
                 <div className="font-semibold py-4 text-[#007cc8]">Байршил</div>
                 <div className="flex gap-4 items-center">
                   <div className="text-gray-600">
                     <MapIcon />
                   </div>
                   <div className="leading-5">
-                    <p>{selectedProperty.address}</p>
-                    <p>Зип код: {selectedProperty.zipCode}</p>
+                    <p>{selectedProperty.address}, {selectedProperty.zipCode}</p>
                   </div>
                 </div>
                 <div className="border-b pt-4 mx-10"></div>
@@ -579,7 +597,7 @@ export default function Dashboard() {
                           {selectedProperty.typeName}
                         </p>
                         <p className="w-1/2 text-start">
-                          ҮХХ: {selectedProperty.apartmentFloor} давхар
+                          ҮХХ: {selectedProperty.apartmentFloor} давхарт
                         </p>
                       </div>
                     )}
