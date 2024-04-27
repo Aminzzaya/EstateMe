@@ -117,6 +117,10 @@ export default function Sidebar() {
                 </div>
               </>
             )}
+            {employeeType == 3 ? (
+              <></>
+            ) : (
+              <>
             <div
               className={`flex items-center gap-4 cursor-pointer ${
                 pathname === "/app/reports"
@@ -128,6 +132,8 @@ export default function Sidebar() {
               <ReportIcon />
               Тайлан
             </div>
+            </>
+            )}
             {employeeType == 9 && (
               <>
                 <div
