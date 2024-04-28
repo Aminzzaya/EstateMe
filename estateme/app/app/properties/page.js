@@ -233,7 +233,7 @@ export default function Dashboard() {
                   + Үл хөдлөх хөрөнгө бүртгэх
                 </Button>
               </div>
-              <div className="w-1/2 self-end text-right pr-12">
+              <div className="w-1/2 self-end text-right">
                 <p>Нийт үл хөдлөх хөрөнгө: {properties.length}</p>
               </div>
             </div>

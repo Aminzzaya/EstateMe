@@ -17,6 +17,7 @@ import {
 export default function Nav() {
   const router = useRouter();
   const pathname = usePathname();
+  const [form] = Form.useForm();
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [loadingBtn, setLoadingBtn] = useState(false);
 
@@ -26,6 +27,18 @@ export default function Nav() {
       label: "Notification 1",
     },
   ];
+
+  const handleSearch = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        console.log("Form values:", values);
+        // Do whatever you need with the form values here
+      })
+      .catch((errorInfo) => {
+        console.log("Validation failed:", errorInfo);
+      });
+  };
 
   return (
     <main>
@@ -61,8 +74,9 @@ export default function Nav() {
             style: { backgroundColor: "green" },
             loading: loadingBtn,
           }}
+          onOk={handleSearch}
         >
-          <Form layout="vertical">
+          <Form layout="vertical" form={form}>
             <div className="pt-4 grid grid-cols-3 gap-12">
               <div className="col-span-1">
                 <p className="text-[#008cc7] font-semibold">Зорилго</p>

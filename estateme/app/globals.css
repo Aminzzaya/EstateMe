@@ -62,7 +62,7 @@ div {
 
 .signin .ant-form-item .ant-form-item-label > label {
   color: #008cc7;
-  font-weight:500;
+  font-weight: 500;
 }
 
 .ant-btn-default:hover {
@@ -124,3 +124,14 @@ div {
   fill: white !important;
 }
 
+.ant-table-wrapper .ant-table-thead th.ant-table-column-sort {
+  background: #46c7ff;
+}
+
+.ant-table-wrapper .ant-table-thead th.ant-table-column-has-sorters:hover {
+  background: #46c7ff;
+}
+
+.ant-table-wrapper .ant-table-thead > tr > th {
+  background: rgb(165, 228, 255);
+}
