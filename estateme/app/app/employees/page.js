@@ -88,10 +88,8 @@ export default function Dashboard() {
     }
   };
 
-  const handleSubmit = async (values) => {
+  const handleSubmit = async ({ formValues }) => {
     setLoadingBtn(true);
-    const { password, lastName, firstName, email, phoneNumber, employeeType } =
-      values;
     try {
       let pictureUrl = profilePreview;
 
@@ -125,12 +123,12 @@ export default function Dashboard() {
         },
         body: JSON.stringify({
           employeeId,
-          password,
-          lastName,
-          firstName,
-          email,
-          phoneNumber,
-          employeeType,
+          password: formValues.password,
+          lastName: formValues.lastName,
+          firstName: formValues.firstName,
+          email: formValues.email,
+          phoneNumber: formValues.phoneNumber,
+          employeeType: formValues.employeeType,
           status,
           profilePicture: pictureUrl,
         }),
@@ -157,11 +155,11 @@ export default function Dashboard() {
     setSelectedEmployee(employee);
   };
 
-  const handleEditSubmit = async (values) => {
-    let { status, email, phoneNumber, employeeTypeName } = values;
+  const handleEditSubmit = async ({ formValues }) => {
+    setLoadingBtn(true);
     try {
-      if (isNaN(employeeTypeName)) {
-        employeeTypeName = selectedEmployee.employeeType;
+      if (isNaN(formValues.employeeTypeName)) {
+        formValues.employeeTypeName = selectedEmployee.employeeType;
       }
       const response = await fetch("/api/updateUserStatus", {
         method: "POST",
@@ -170,10 +168,10 @@ export default function Dashboard() {
         },
         body: JSON.stringify({
           employeeId: selectedEmployee.employeeId,
-          email,
-          phoneNumber,
-          employeeType: employeeTypeName,
-          status,
+          email: formValues.email,
+          phoneNumber: formValues.phoneNumber,
+          employeeType: formValues.employeeTypeName,
+          status: formValues.status,
         }),
       });
 
@@ -186,6 +184,8 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error("Алдаа: Хэрэглэгчийн мэдээлэл BE:", error);
+    } finally {
+      setLoadingBtn(false);
     }
   };
 
@@ -313,7 +313,15 @@ export default function Dashboard() {
             title="Ажилтны бүртгэл"
             open={registerModalOpen}
             onCancel={() => setRegisterModalOpen(false)}
-            footer={null}
+            cancelText="Буцах"
+            okText="Хадгалах"
+            okButtonProps={{
+              style: { backgroundColor: "green" },
+              loading: loadingBtn,
+            }}
+            onOk={() =>
+              handleSubmit({ formValues: createform.getFieldsValue() })
+            }
           >
             <div className="flex justify-center">
               <div className="border rounded-full w-28 h-28">
@@ -335,7 +343,6 @@ export default function Dashboard() {
               form={createform}
               className="pt-4"
               layout={"vertical"}
-              onFinish={handleSubmit}
               autoComplete="off"
             >
               <div className="flex flex-wrap">
@@ -432,20 +439,6 @@ export default function Dashboard() {
                   </Form.Item>
                 </div>
               </div>
-              <div className="flex justify-end px-2 pt-2">
-                <Form.Item>
-                  <Button onClick={() => setRegisterModalOpen(false)}>
-                    Буцах
-                  </Button>
-                  <Button
-                    loading={loadingBtn}
-                    className="border-white bg-green-600 text-white ml-2 ant-btn-submit"
-                    htmlType="submit"
-                  >
-                    Хадгалах
-                  </Button>
-                </Form.Item>
-              </div>
             </Form>
           </Modal>
           {selectedEmployee && (
@@ -453,7 +446,15 @@ export default function Dashboard() {
               title="Мэдээлэл засах"
               open={editModalOpen}
               onCancel={() => setEditModalOpen(false)}
-              footer={null}
+              cancelText="Буцах"
+              okText="Хадгалах"
+              okButtonProps={{
+                style: { backgroundColor: "green" },
+                loading: loadingBtn,
+              }}
+              onOk={() =>
+                handleEditSubmit({ formValues: form.getFieldsValue() })
+              }
             >
               <div className="flex justify-center">
                 <div className="border rounded-full w-28 h-28">
@@ -494,7 +495,6 @@ export default function Dashboard() {
                 form={form}
                 className="pt-4"
                 layout={"vertical"}
-                onFinish={handleEditSubmit}
                 autoComplete="off"
                 initialValues={selectedEmployee}
               >
@@ -528,19 +528,6 @@ export default function Dashboard() {
                       </Select>
                     </Form.Item>
                   </div>
-                </div>
-                <div className="flex justify-end px-2 pt-2">
-                  <Form.Item>
-                    <Button onClick={() => setEditModalOpen(false)}>
-                      Буцах
-                    </Button>
-                    <Button
-                      className="border-white bg-green-600 text-white ml-2 ant-btn-submit"
-                      htmlType="submit"
-                    >
-                      Хадгалах
-                    </Button>
-                  </Form.Item>
                 </div>
               </Form>
             </Modal>
