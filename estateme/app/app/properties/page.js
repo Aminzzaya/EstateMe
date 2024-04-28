@@ -30,7 +30,7 @@ import {
 import { useRouter } from "next/navigation";
 import Nav from "@/components/Nav";
 
-export default function Dashboard() {
+export default function Properties() {
   const { Option } = Select;
   const [form] = Form.useForm();
   const router = useRouter();
