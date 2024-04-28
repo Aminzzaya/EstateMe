@@ -271,7 +271,7 @@ export default function Dashboard() {
                     </p>
                     <p>🧳 {selectedProperty.purpose}</p>
                     <div className="flex items-center gap-1 text-gray-600">
-                      <UserIcon />
+                      <p className="font-semibold">Агент:</p>
                       <p className="text-black">{selectedProperty.employee}</p>
                     </div>
                   </div>

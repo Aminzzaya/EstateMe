@@ -176,7 +176,7 @@ export default function Dashboard() {
     {
       title: "№",
       dataIndex: "index",
-      width: 40,
+      width: 50,
       render: (_, record, index) => (
         <span className="font-medium">{index + 1}</span>
       ),
@@ -201,7 +201,7 @@ export default function Dashboard() {
       title: "Зорилго",
       dataIndex: "purpose",
       sorter: (a, b) => a.purpose.localeCompare(b.purpose),
-      width: 130,
+      width: 120,
     },
     {
       title: "Төрөл",
@@ -417,7 +417,7 @@ export default function Dashboard() {
               columns={columns}
               locale={customLocale}
               pagination={false}
-              scroll={{ y: 280 }}
+              scroll={{ y: 360 }}
               dataSource={properties.map((property, index) => ({
                 ...property,
                 key: index,
