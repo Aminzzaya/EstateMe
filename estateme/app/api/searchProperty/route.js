@@ -56,6 +56,7 @@ export async function POST(req) {
 
     const filteredProperties = await Property.aggregate([
       { $match: query },
+      { $match: { ...query, statusId: { $nin: [4, 6] } } },
       {
         $lookup: {
           from: "propertyType",

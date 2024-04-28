@@ -35,7 +35,7 @@ export default function Dashboard() {
   const [form] = Form.useForm();
   const router = useRouter();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [propertyModalOpen, setPropertyModalOpen] = useState(false);
   const [properties, setProperties] = useState([]);
@@ -45,7 +45,6 @@ export default function Dashboard() {
   }, []);
 
   const getProperties = async () => {
-    setLoading(true);
     try {
       const response = await fetch("/api/getProperties");
       if (response.ok) {
@@ -418,7 +417,6 @@ export default function Dashboard() {
                         </p>
                       </div>
                     )}
-                    <div className="border-b pt-4"></div>
                     {selectedProperty.buildingMaterial && (
                       <p className="pt-3">
                         Барилгын материал: {selectedProperty.buildingMaterial}
@@ -532,7 +530,7 @@ export default function Dashboard() {
                   <div className="w-[92%]">
                     <Table
                       rowClassName={(record, index) =>
-                        index === 0 ? "bg-blue-100" : ""
+                        index === 0 ? "bg-gray-100" : ""
                       }
                       dataSource={[
                         {

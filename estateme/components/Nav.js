@@ -8,7 +8,8 @@ import {
   Dropdown,
   Modal,
   Radio,
-  Checkbox,
+  Divider,
+  Space,
   Form,
   Select,
   InputNumber,
@@ -29,12 +30,7 @@ export default function Nav() {
     getCities();
   }, []);
 
-  const items = [
-    {
-      key: "1",
-      label: "Notification 1",
-    },
-  ];
+  const items = [];
 
   const getCities = async () => {
     try {
@@ -111,6 +107,14 @@ export default function Nav() {
     }
   };
 
+  const priceFormatter = (value) => {
+    if (!value) return "";
+    const formattedValue = value
+      .toString()
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return `${formattedValue}`;
+  };
+
   return (
     <main>
       <ul className="flex gap-3">
@@ -127,8 +131,15 @@ export default function Nav() {
             trigger="click"
             menu={{ items }}
           >
-            <Button className="w-8 h-8 p-[5px] hover:bg-[#008cc7] text-[#008cc7] rounded-lg border-blue-300">
+            <Button className="relative w-8 h-8 p-[5px] hover:bg-[#008cc7] text-[#008cc7] rounded-lg border-blue-300">
               <BellIcon />
+              <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2">
+                <div className="w-5 h-5">
+                  <p className="bg-red-500 rounded-full text-white text-xs py-[2px]">
+                    2
+                  </p>
+                </div>
+              </div>
             </Button>
           </Dropdown>
         </li>
@@ -293,10 +304,18 @@ export default function Nav() {
                 </Form.Item>
                 <p className="text-[#008cc7] font-semibold">Үнэ</p>
                 <Form.Item className="pt-2" name="maxTotalAvgPrice">
-                  <InputNumber placeholder="Дээд үнэ" addonAfter="₮" />
+                  <InputNumber
+                    placeholder="Дээд үнэ"
+                    addonAfter="₮"
+                    formatter={priceFormatter}
+                  />
                 </Form.Item>
                 <Form.Item className="-mt-3" name="minTotalAvgPrice">
-                  <InputNumber placeholder="Доод үнэ" addonAfter="₮" />
+                  <InputNumber
+                    placeholder="Доод үнэ"
+                    addonAfter="₮"
+                    formatter={priceFormatter}
+                  />
                 </Form.Item>
               </div>
             </div>

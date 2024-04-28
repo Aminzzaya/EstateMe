@@ -42,7 +42,7 @@ export default function Dashboard() {
   const [propertyModalOpen, setPropertyModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [employeeId, setEmployeeId] = useState(null);
   const [employeeType, setEmployeeType] = useState(null);
   const [loadingBtn, setLoadingBtn] = useState(false);
@@ -62,7 +62,6 @@ export default function Dashboard() {
   }, [selectedProperty]);
 
   const getProperties = async (employeeId) => {
-    setLoading(true);
     try {
       const response = await fetch("/api/getPropertiesById", {
         method: "POST",
@@ -201,7 +200,7 @@ export default function Dashboard() {
       title: "Зорилго",
       dataIndex: "purpose",
       sorter: (a, b) => a.purpose.localeCompare(b.purpose),
-      width: 120,
+      width: 130,
     },
     {
       title: "Төрөл",
@@ -220,7 +219,7 @@ export default function Dashboard() {
       title: "Төлөв",
       dataIndex: "statusName",
       sorter: (a, b) => a.statusId - b.statusId,
-      width: 140,
+      width: 160,
       render: (statusName) => (
         <div
           className={`status-cell text-center ${getStatusColor(statusName)}`}
@@ -791,7 +790,7 @@ export default function Dashboard() {
                   <div className="w-[92%]">
                     <Table
                       rowClassName={(record, index) =>
-                        index === 0 ? "bg-blue-100" : ""
+                        index === 0 ? "bg-gray-100" : ""
                       }
                       dataSource={[
                         {
