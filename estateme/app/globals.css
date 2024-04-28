@@ -125,13 +125,13 @@ div {
 }
 
 .ant-table-wrapper .ant-table-thead th.ant-table-column-sort {
-  background: #46c7ff;
+  background: #008bc750;
 }
 
 .ant-table-wrapper .ant-table-thead th.ant-table-column-has-sorters:hover {
-  background: #46c7ff;
+  background: #008bc750;
 }
 
 .ant-table-wrapper .ant-table-thead > tr > th {
-  background: rgb(165, 228, 255);
+  background: rgba(0, 140, 199, 0.2);
 }
