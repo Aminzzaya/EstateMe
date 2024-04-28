@@ -15,7 +15,7 @@ import {
 import { LoadingOutlined } from "@ant-design/icons";
 import {
   PencilIcon,
-  BellIcon,
+  PrinterIcon,
   SearchIcon,
   MapIcon,
   PinIcon,
@@ -124,7 +124,7 @@ export default function Dashboard() {
       title: "Зорилго",
       dataIndex: "purpose",
       width: 130,
-      sorter: (a, b) => a.purpose - b.purpose,
+      sorter: (a, b) => a.purpose.localeCompare(b.purpose),
     },
     {
       title: "Байршил",
@@ -235,8 +235,9 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="pt-6"></div>
-            <div className="page-content overflow-auto max-h-[480px]">
+            <div className="overflow-auto">
               <Table
+                pagination={{ pageSize: 5 }}
                 columns={columns}
                 locale={customLocale}
                 dataSource={properties.map((property, index) => ({
@@ -256,19 +257,28 @@ export default function Dashboard() {
               style={{ top: 40, bottom: 30 }}
             >
               <div>
-                <div className="pt-2 flex items-center gap-4">
-                  <p
-                    className={`status-cell ${getStatusColor(
-                      selectedProperty.statusName
-                    )}`}
-                  >
-                    {selectedProperty.statusName}
-                  </p>
-                  <p>🧳 {selectedProperty.purpose}</p>
-                  <div className="flex items-center gap-1 text-gray-600">
-                    <UserIcon />
-                    <p className="text-black">{selectedProperty.employee}</p>
+                <div className="pt-2 justify-between flex">
+                  <div className="flex items-center gap-4">
+                    <p
+                      className={`status-cell ${getStatusColor(
+                        selectedProperty.statusName
+                      )}`}
+                    >
+                      {selectedProperty.statusName}
+                    </p>
+                    <p>🧳 {selectedProperty.purpose}</p>
+                    <div className="flex items-center gap-1 text-gray-600">
+                      <UserIcon />
+                      <p className="text-black">{selectedProperty.employee}</p>
+                    </div>
                   </div>
+                  <Button
+                    className="flex items-center gap-2 text-[#008cc7]"
+                    onClick={() => window.print()}
+                  >
+                    <PrinterIcon />
+                    Хэвлэх
+                  </Button>
                 </div>
                 <div className="pt-5 rounded-xl overflow-hidden">
                   <Carousel autoplay autoplaySpeed={2000}>
@@ -312,7 +322,9 @@ export default function Dashboard() {
                     <MapIcon />
                   </div>
                   <div className="leading-5">
-                    <p>{selectedProperty.address}, {selectedProperty.zipCode}</p>
+                    <p>
+                      {selectedProperty.address}, {selectedProperty.zipCode}
+                    </p>
                   </div>
                 </div>
                 <div className="border-b pt-4 mx-10"></div>

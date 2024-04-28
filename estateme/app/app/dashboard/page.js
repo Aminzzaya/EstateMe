@@ -29,6 +29,7 @@ import {
   DateIcon,
   CarIcon,
   EyeIcon,
+  PrinterIcon,
 } from "@/components/Icons";
 import { Doughnut } from "react-chartjs-2";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -181,7 +182,6 @@ export default function Dashboard() {
     {
       title: "ҮХХ-ийн дугаар",
       dataIndex: "propertyId",
-      defaultSortOrder: "descend",
       width: 120,
       sorter: (a, b) => {
         const idA = parseInt(a.propertyId.substr(2), 10);
@@ -192,7 +192,7 @@ export default function Dashboard() {
     {
       title: "Зорилго",
       dataIndex: "purpose",
-      sorter: (a, b) => a.purpose - b.purpose,
+      sorter: (a, b) => a.purpose.localeCompare(b.purpose),
       width: 130,
     },
     {
@@ -404,17 +404,17 @@ export default function Dashboard() {
             </p>
             <Nav />
           </div>
-          <div className="page-content">
-          <Table
-            columns={columns}
-            locale={customLocale}
-            pagination={false}
-            scroll={{ y: 260 }}
-            dataSource={properties.map((property, index) => ({
-              ...property,
-              key: index,
-            }))}
-          />
+          <div>
+            <Table
+              columns={columns}
+              locale={customLocale}
+              pagination={false}
+              scroll={{ y: 280 }}
+              dataSource={properties.map((property, index) => ({
+                ...property,
+                key: index,
+              }))}
+            />
           </div>
           <div className="grid grid-cols-5 pt-10 gap-16">
             <div className="col-span-2">
@@ -484,19 +484,28 @@ export default function Dashboard() {
               footer={null}
             >
               <div>
-                <div className="pt-2 flex items-center gap-4">
-                  <p
-                    className={`status-cell ${getStatusColor(
-                      selectedProperty.statusName
-                    )}`}
-                  >
-                    {selectedProperty.statusName}
-                  </p>
-                  <p>🧳 {selectedProperty.purpose}</p>
-                  <div className="flex items-center gap-1 text-gray-600">
-                    <p className="font-semibold">Агент:</p>
-                    <p className="text-black">{selectedProperty.employee}</p>
+                <div className="pt-2 justify-between items-center flex">
+                  <div className="flex items-center gap-4">
+                    <p
+                      className={`status-cell ${getStatusColor(
+                        selectedProperty.statusName
+                      )}`}
+                    >
+                      {selectedProperty.statusName}
+                    </p>
+                    <p>🧳 {selectedProperty.purpose}</p>
+                    <div className="flex items-center gap-1 text-gray-600">
+                      <p className="font-semibold">Агент:</p>
+                      <p className="text-black">{selectedProperty.employee}</p>
+                    </div>
                   </div>
+                  <Button
+                    className="flex items-center gap-2 text-[#008cc7]"
+                    onClick={() => window.print()}
+                  >
+                    <PrinterIcon />
+                    Хэвлэх
+                  </Button>
                 </div>
                 <div className="pt-5 rounded-xl overflow-hidden">
                   <Carousel autoplay autoplaySpeed={2000}>
@@ -534,14 +543,30 @@ export default function Dashboard() {
                   )}
                 </div>
 
-                <div className="font-semibold py-4 text-[#007cc8]">Эзэмшигч</div>
+                <div className="font-semibold py-4 text-[#007cc8]">
+                  Эзэмшигч
+                </div>
                 <div className="flex gap-4 items-center">
                   <div className="text-gray-600">
                     <UserIcon />
                   </div>
                   <div className="leading-5">
-                    <p>{selectedProperty.firstName} (<a href={`tel:${selectedProperty.phoneNumber}`}>{selectedProperty.phoneNumber}</a>)</p>
-                    <p className="pt-1">Цахим шуудан: <a href={`mailto:${selectedProperty.email}`} className="underline">{selectedProperty.email}</a></p>
+                    <p>
+                      {selectedProperty.firstName} (
+                      <a href={`tel:${selectedProperty.phoneNumber}`}>
+                        {selectedProperty.phoneNumber}
+                      </a>
+                      )
+                    </p>
+                    <p className="pt-1">
+                      Цахим шуудан:{" "}
+                      <a
+                        href={`mailto:${selectedProperty.email}`}
+                        className="underline"
+                      >
+                        {selectedProperty.email}
+                      </a>
+                    </p>
                   </div>
                 </div>
 
@@ -551,7 +576,9 @@ export default function Dashboard() {
                     <MapIcon />
                   </div>
                   <div className="leading-5">
-                    <p>{selectedProperty.address}, {selectedProperty.zipCode}</p>
+                    <p>
+                      {selectedProperty.address}, {selectedProperty.zipCode}
+                    </p>
                   </div>
                 </div>
                 <div className="border-b pt-4 mx-10"></div>
@@ -642,7 +669,7 @@ export default function Dashboard() {
                         </p>
                       </div>
                     )}
-                    <div className="border-b pt-4"></div>
+
                     {selectedProperty.buildingMaterial && (
                       <p className="pt-3">
                         Барилгын материал: {selectedProperty.buildingMaterial}

@@ -429,6 +429,7 @@ export default function Dashboard() {
         onFinish={handleFinish}
         autoComplete="off"
         form={form}
+        initialValues={{ regionId: 1 }}
       >
         <div className="pt-6 pb-5 flex gap-4">
           <div
@@ -664,93 +665,96 @@ export default function Dashboard() {
                     ]}
                   >
                     <Select placeholder="Сонгох">
-                      <Option value>Монгол</Option>
+                      <Option value={1}>Монгол</Option>
                     </Select>
                   </Form.Item>
                 </div>
               </div>
               <div className="flex flex-wrap">
-              <div className="w-1/4 px-2">
-                <Form.Item
-                  labelCol={{ span: 19 }}
-                  label="Хот, аймаг"
-                  name="cityId"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Утга оруулна уу!",
-                    },
-                  ]}
-                >
-                  <Select placeholder="Сонгох" onChange={handleCitySelect}>
-                    {cities.map((city) => (
-                      <Option key={city.cityId} value={city.cityId}>
-                        {city.cityName}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-              <div className="w-1/4 px-2">
-                <Form.Item
-                  labelCol={{ span: 19 }}
-                  label="Дүүрэг, сум"
-                  name="districtId"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Утга оруулна уу!",
-                    },
-                  ]}
-                >
-                  <Select placeholder="Сонгох" onChange={handleDistrictSelect}>
-                    {districts.map((district) => (
-                      <Option
-                        key={district.districtId}
-                        value={district.districtId}
-                      >
-                        {district.districtName}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-              <div className="w-1/4 px-2">
-                <Form.Item
-                  labelCol={{ span: 19 }}
-                  label="Хороо, баг"
-                  name="streetId"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Утга оруулна уу!",
-                    },
-                  ]}
-                >
-                  <Select placeholder="Сонгох">
-                    {streets.map((street) => (
-                      <Option key={street.streetId} value={street.streetId}>
-                        {street.streetName}
-                      </Option>
-                    ))}
-                  </Select>
-                </Form.Item>
-              </div>
-              <div className="w-1/4 px-2">
-                <Form.Item
-                  labelCol={{ span: 19 }}
-                  label="Зип код"
-                  name="zipCode"
-                  rules={[
-                    {
-                      required: true,
-                      message: "Утга оруулна уу!",
-                    },
-                  ]}
-                >
-                  <Input />
-                </Form.Item>
-              </div>
+                <div className="w-1/4 px-2">
+                  <Form.Item
+                    labelCol={{ span: 19 }}
+                    label="Хот, аймаг"
+                    name="cityId"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Утга оруулна уу!",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Сонгох" onChange={handleCitySelect}>
+                      {cities.map((city) => (
+                        <Option key={city.cityId} value={city.cityId}>
+                          {city.cityName}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                <div className="w-1/4 px-2">
+                  <Form.Item
+                    labelCol={{ span: 19 }}
+                    label="Дүүрэг, сум"
+                    name="districtId"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Утга оруулна уу!",
+                      },
+                    ]}
+                  >
+                    <Select
+                      placeholder="Сонгох"
+                      onChange={handleDistrictSelect}
+                    >
+                      {districts.map((district) => (
+                        <Option
+                          key={district.districtId}
+                          value={district.districtId}
+                        >
+                          {district.districtName}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                <div className="w-1/4 px-2">
+                  <Form.Item
+                    labelCol={{ span: 19 }}
+                    label="Хороо, баг"
+                    name="streetId"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Утга оруулна уу!",
+                      },
+                    ]}
+                  >
+                    <Select placeholder="Сонгох">
+                      {streets.map((street) => (
+                        <Option key={street.streetId} value={street.streetId}>
+                          {street.streetName}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+                <div className="w-1/4 px-2">
+                  <Form.Item
+                    labelCol={{ span: 19 }}
+                    label="Зип код"
+                    name="zipCode"
+                    rules={[
+                      {
+                        required: true,
+                        message: "Утга оруулна уу!",
+                      },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                </div>
               </div>
 
               <div className="border-b border-1 mb-6"></div>
@@ -794,7 +798,7 @@ export default function Dashboard() {
                     label="Хамгийн ойр цэцэрлэг"
                     name="distanceToKindergarten"
                   >
-                   <InputNumber min={0} placeholder="0" addonAfter="км" />
+                    <InputNumber min={0} placeholder="0" addonAfter="км" />
                   </Form.Item>
                 </div>
               </div>
@@ -1075,7 +1079,12 @@ export default function Dashboard() {
                         label="Зогсоолын үнэ"
                         name="garagePrice"
                       >
-                        <InputNumber min={0} formatter={priceFormatter} placeholder="0" addonAfter="₮" />
+                        <InputNumber
+                          min={0}
+                          formatter={priceFormatter}
+                          placeholder="0"
+                          addonAfter="₮"
+                        />
                       </Form.Item>
                     </div>
                   </div>
@@ -1216,7 +1225,7 @@ export default function Dashboard() {
                   <div className="border-b border-1 mb-6"></div>
                   <div className="grid grid-cols-2 gap-12 pr-14">
                     <div className="col-span-1">
-                    <Form.Item
+                      <Form.Item
                         labelCol={{ span: 20 }}
                         name="isCentralWaterSupplies"
                         valuePropName="checked"
@@ -1231,7 +1240,7 @@ export default function Dashboard() {
                       </Form.Item>
                     </div>
                     <div className="col-span-1">
-                    <Form.Item
+                      <Form.Item
                         labelCol={{ span: 20 }}
                         name="isAdditionalPowerSupplies"
                         valuePropName="checked"
@@ -1379,9 +1388,8 @@ export default function Dashboard() {
           )}
           {current == 4 && (
             <div className="page-content p-6 px-10 pt-8">
-              
               <div className="grid grid-cols-5 pt-2 pb-6 gap-6">
-              <p className="flex items-center font-medium">Зураг хавсаргах</p>
+                <p className="flex items-center font-medium">Зураг хавсаргах</p>
                 {selectedImages.map((image, index) => (
                   <div
                     key={index}

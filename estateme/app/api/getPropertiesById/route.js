@@ -126,6 +126,12 @@ export async function POST(req) {
                 ".",
               ],
             },
+            sorter: { $eq: ["$statusId", 5] },
+          },
+        },
+        {
+          $sort: {
+            sorter: -1,
           },
         },
         {
