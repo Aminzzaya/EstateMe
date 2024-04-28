@@ -33,7 +33,6 @@ export default function Nav() {
       .validateFields()
       .then((values) => {
         console.log("Form values:", values);
-        // Do whatever you need with the form values here
       })
       .catch((errorInfo) => {
         console.log("Validation failed:", errorInfo);
