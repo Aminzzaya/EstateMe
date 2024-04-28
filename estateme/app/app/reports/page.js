@@ -3,7 +3,12 @@
 import Image from "next/image";
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, DatePicker, Select, message, Table } from "antd";
-import { SearchIcon, BellIcon } from "@/components/Icons";
+import {
+  SearchIcon,
+  BellIcon,
+  PrinterIcon,
+  ExcelIcon,
+} from "@/components/Icons";
 import Nav from "@/components/Nav";
 import "chart.js/auto";
 import { Bar } from "react-chartjs-2";
@@ -236,6 +241,10 @@ export default function Dashboard() {
     ],
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
   return (
     <main className="px-12 py-8">
       <div className="pt-6 pb-4 flex justify-between">
@@ -285,52 +294,90 @@ export default function Dashboard() {
         </Form>
       </div>
       {agentReport.length > 0 && (
-        <div className="pt-4 grid grid-cols-2 gap-12">
-          <div className="col-span-1">
-            <Table
-              locale={customLocale}
-              pagination={false}
-              columns={columns}
-              dataSource={agentReport.map((agent, index) => ({
-                ...agent,
-                key: index,
-              }))}
-            />
+        <>
+          <div className="flex gap-4">
+            <Button
+              htmlType="submit"
+              className="bg-[#008cc7] text-white border-none flex items-center gap-2"
+              onClick={handlePrint}
+            >
+              <PrinterIcon />
+              Хэвлэх
+            </Button>
+            {/* <Button
+              htmlType="submit"
+              className="bg-[#008cc7] text-white border-none flex items-center gap-2"
+            >
+              <ExcelIcon />
+              Татах
+            </Button> */}
           </div>
-          <div className="col-span-1">
-            <p className="font-semibold text-[#008cc7]">График</p>
-            <Bar
-              options={options}
-              data={data}
-              height={"220px"}
-              className="pt-4 pr-6"
-            />
+          <div className="pt-6 grid grid-cols-2 gap-12 print-only">
+            <div className="col-span-1">
+              <Table
+                locale={customLocale}
+                pagination={false}
+                columns={columns}
+                dataSource={agentReport.map((agent, index) => ({
+                  ...agent,
+                  key: index,
+                }))}
+              />
+            </div>
+            <div className="col-span-1">
+              <p className="font-semibold text-[#008cc7]">График</p>
+              <Bar
+                options={options}
+                data={data}
+                height={"220px"}
+                className="pt-4 pr-6"
+              />
+            </div>
           </div>
-        </div>
+        </>
       )}
       {propertyReport.length > 0 && (
-        <div className="pt-4 grid grid-cols-2 gap-12">
-          <div className="col-span-1">
-            <Table
-              locale={customLocale}
-              pagination={false}
-              columns={columnsProperty}
-              dataSource={propertyReport.map((property, index) => ({
-                ...property,
-                key: index,
-              }))}
-            />
+        <>
+          <div className="flex gap-4">
+            <Button
+              htmlType="submit"
+              className="bg-[#008cc7] text-white border-none flex items-center gap-2"
+              onClick={handlePrint}
+            >
+              <PrinterIcon />
+              Хэвлэх
+            </Button>
+            {/* <Button
+              htmlType="submit"
+              className="bg-[#008cc7] text-white border-none flex items-center gap-2"
+            >
+              <ExcelIcon />
+              Татах
+            </Button> */}
           </div>
-          <div className="col-span-1">
-            <p className="font-semibold text-[#008cc7]">График</p>
-            <Bar
-              options={options}
-              data={dataProperty}
-              height={"220px"}
-              className="pt-4 pr-6"
-            />
+          <div className="pt-4 grid grid-cols-2 gap-12 print-only">
+            <div className="col-span-1">
+              <Table
+                locale={customLocale}
+                pagination={false}
+                columns={columnsProperty}
+                dataSource={propertyReport.map((property, index) => ({
+                  ...property,
+                  key: index,
+                }))}
+              />
+            </div>
+            <div className="col-span-1">
+              <p className="font-semibold text-[#008cc7]">График</p>
+              <Bar
+                options={options}
+                data={dataProperty}
+                height={"220px"}
+                className="pt-4 pr-6"
+              />
+            </div>
           </div>
-        </div>
+        </>
       )}
     </main>
   );

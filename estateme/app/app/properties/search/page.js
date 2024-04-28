@@ -128,7 +128,11 @@ export default function Search() {
         {filters.distanceToDowntown && (
           <div className="flex">
             <p className="bg-gray-100 p-1 px-3 rounded-xl">
-              Хотын төвөөс ~{filters.distanceToDowntown} км
+              Хотын төвөөс {`<`}
+              {filters.distanceToDowntown == 100
+                ? "7+"
+                : filters.distanceToDowntown}{" "}
+              км
             </p>
           </div>
         )}

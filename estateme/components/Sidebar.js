@@ -121,18 +121,18 @@ export default function Sidebar() {
               <></>
             ) : (
               <>
-            <div
-              className={`flex items-center gap-4 cursor-pointer ${
-                pathname === "/app/reports"
-                  ? "text-[#008cc7] font-semibold"
-                  : "text-[#6f6f6f] hover:font-medium"
-              }`}
-              onClick={() => router.push("/app/reports")}
-            >
-              <ReportIcon />
-              Тайлан
-            </div>
-            </>
+                <div
+                  className={`flex items-center gap-4 cursor-pointer ${
+                    pathname === "/app/reports"
+                      ? "text-[#008cc7] font-semibold"
+                      : "text-[#6f6f6f] hover:font-medium"
+                  }`}
+                  onClick={() => router.push("/app/reports")}
+                >
+                  <ReportIcon />
+                  Тайлан
+                </div>
+              </>
             )}
             {employeeType == 9 && (
               <>
@@ -153,7 +153,7 @@ export default function Sidebar() {
                       ? "text-[#008cc7] font-semibold"
                       : "text-[#6f6f6f] hover:font-medium"
                   }`}
-                  onClick={() => router.push("/app/settings")}
+                  onClick={() => router.push("/app/address")}
                 >
                   <MapIcon />
                   Хаягийн мэдээлэл

@@ -1389,7 +1389,7 @@ export default function Dashboard() {
           {current == 4 && (
             <div className="page-content p-6 px-10 pt-8">
               <div className="grid grid-cols-5 pt-2 pb-6 gap-6">
-                <p className="flex items-center font-medium">Зураг хавсаргах</p>
+                <p className="flex items-center">Зураг хавсаргах</p>
                 {selectedImages.map((image, index) => (
                   <div
                     key={index}
@@ -1439,15 +1439,17 @@ export default function Dashboard() {
               </div>
               <Form.Item
                 //labelCol={{ span: 10 }}
-                label="Гэрчилгээ хавсаргах"
                 name="certificate"
               >
-                <div className="bg-gray-100 p-2 mx-16 rounded-lg">
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={onCertificateChange}
-                  />
+                <div className="flex items-center">
+                  Гэрчилгээ хавсаргах
+                  <div className="bg-gray-100 p-2 mx-12 rounded-lg">
+                    <input
+                      type="file"
+                      accept="application/pdf"
+                      onChange={onCertificateChange}
+                    />
+                  </div>
                 </div>
               </Form.Item>
               <div className="border-b border-1 mb-6"></div>
