@@ -174,7 +174,7 @@ export default function Sidebar() {
             </div>
           </div>
           <div
-            className="pt-2 cursor-pointer hover:font-medium flex justify-center items-center gap-2 text-[#6f6f6f]"
+            className="pt-10 cursor-pointer hover:font-medium flex justify-center items-center gap-2 text-[#6f6f6f]"
             onClick={handleSignOut}
           >
             <SignOutIcon />
