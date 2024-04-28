@@ -664,7 +664,7 @@ export default function Dashboard() {
                     ]}
                   >
                     <Select placeholder="Сонгох">
-                      <Option value="1">Монгол</Option>
+                      <Option value>Монгол</Option>
                     </Select>
                   </Form.Item>
                 </div>
