@@ -12,14 +12,22 @@ import {
   Form,
   Select,
   InputNumber,
+  message,
 } from "antd";
 
 export default function Nav() {
   const router = useRouter();
   const pathname = usePathname();
   const [form] = Form.useForm();
+  const { Option } = Select;
+  const [cities, setCities] = useState([]);
+  const [districts, setDistricts] = useState([]);
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [loadingBtn, setLoadingBtn] = useState(false);
+
+  useEffect(() => {
+    getCities();
+  }, []);
 
   const items = [
     {
@@ -28,16 +36,79 @@ export default function Nav() {
     },
   ];
 
-  const handleSearch = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        console.log("Form values:", values);
-        // Do whatever you need with the form values here
-      })
-      .catch((errorInfo) => {
-        console.log("Validation failed:", errorInfo);
+  const getCities = async () => {
+    try {
+      const response = await fetch("/api/getCities");
+      if (response.ok) {
+        const data = await response.json();
+        setCities(data.cities);
+      } else {
+        console.error("Алдаа: Хотын мэдээлэл FE:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Алдаа: Хотын мэдээлэл BE:", error);
+    }
+  };
+
+  const handleCitySelect = (value) => {
+    getDistrict(value);
+  };
+
+  const getDistrict = async (cityId) => {
+    try {
+      const response = await fetch("/api/getDistrict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ cityId }),
       });
+      if (response.ok) {
+        const data = await response.json();
+        setDistricts(data.district);
+      } else {
+        console.error("Алдаа: Дүүргийн мэдээлэл FE:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Алдаа: Дүүргийн мэдээлэл BE:", error);
+    }
+  };
+
+  const handleSearch = async () => {
+    const values = await form.validateFields();
+    setLoadingBtn(true);
+    try {
+      const response = await fetch("/api/searchProperty", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        if (data.properties.length > 0) {
+          localStorage.setItem(
+            "searchResults",
+            JSON.stringify(data.properties)
+          );
+          localStorage.setItem("searchFilters", JSON.stringify(data.filters));
+          setSearchModalOpen(false);
+          router.push("/app/properties/search");
+        } else {
+          message.error("Үр дүн олдсонгүй!");
+        }
+      } else {
+        console.error(
+          "Алдаа: Үл хөдлөх хөрөнгө хайлт FE:",
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("Алдаа: Үл хөдлөх хөрөнгө хайлт BE:", error);
+    } finally {
+      setLoadingBtn(false);
+    }
   };
 
   return (
@@ -80,7 +151,7 @@ export default function Nav() {
             <div className="pt-4 grid grid-cols-3 gap-12">
               <div className="col-span-1">
                 <p className="text-[#008cc7] font-semibold">Зорилго</p>
-                <Form.Item>
+                <Form.Item name="purpose">
                   <Radio.Group
                     className="pt-2"
                     options={[
@@ -98,69 +169,85 @@ export default function Nav() {
                   />
                 </Form.Item>
                 <p className="pb-2 text-[#008cc7] font-semibold">Байршил</p>
-                <Form.Item>
-                  <Select placeholder="Бүсчлэл" />
+                <Form.Item name="regionId">
+                  <Select placeholder="Бүсчлэл">
+                    <Option value={1}>Монгол</Option>
+                  </Select>
                 </Form.Item>
-                <Form.Item className="-mt-3">
-                  <Select placeholder="Хот, аймаг" />
+                <Form.Item className="-mt-3" name="cityId">
+                  <Select placeholder="Хот, аймаг" onChange={handleCitySelect}>
+                    {cities.map((city) => (
+                      <Option key={city.cityId} value={city.cityId}>
+                        {city.cityName}
+                      </Option>
+                    ))}
+                  </Select>
                 </Form.Item>
-                <Form.Item className="-mt-3">
-                  <Select placeholder="Дүүрэг, сум" />
+                <Form.Item className="-mt-3" name="districtId">
+                  <Select placeholder="Дүүрэг, сум">
+                    {districts.map((district) => (
+                      <Option
+                        key={district.districtId}
+                        value={district.districtId}
+                      >
+                        {district.districtName}
+                      </Option>
+                    ))}
+                  </Select>
                 </Form.Item>
               </div>
               <div className="col-span-1">
                 <p className="text-[#008cc7] font-semibold">
                   Үл хөдлөх хөрөнгийн төрөл
                 </p>
-                <Form.Item>
-                  <Checkbox.Group
+                <Form.Item name="typeId">
+                  <Radio.Group
                     className="pt-2"
                     options={[
                       {
                         label: "Орон сууц",
-                        value: "Орон сууц",
+                        value: 1,
                       },
                       {
                         label: "Амины сууц",
-                        value: "Амины сууц",
+                        value: 2,
                       },
                       {
                         label: "Пентхаус",
-                        value: "Пентхаус",
+                        value: 3,
                       },
                       {
                         label: "Газар",
-                        value: "Газар",
+                        value: 4,
                       },
                       {
                         label: "Зогсоолын талбай",
-                        value: "Зогсоолын талбай",
+                        value: 5,
                       },
                     ]}
-                    defaultValue={["Худалдах"]}
                     //onChange={onChange}
                   />
                 </Form.Item>
                 <p className="text-[#008cc7] font-semibold">Өрөөний тоо</p>
-                <Form.Item>
+                <Form.Item name="numOfRoom">
                   <Radio.Group
                     className="pt-2"
                     options={[
                       {
                         label: "1+",
-                        value: "1",
+                        value: 1,
                       },
                       {
                         label: "2+",
-                        value: "2",
+                        value: 2,
                       },
                       {
                         label: "3+",
-                        value: "3",
+                        value: 3,
                       },
                       {
                         label: "4+",
-                        value: "4",
+                        value: 4,
                       },
                     ]}
                     optionType="button"
@@ -170,25 +257,25 @@ export default function Nav() {
                 <p className="text-[#008cc7] font-semibold">
                   Хотын төв хүртэлх зай (км)
                 </p>
-                <Form.Item>
+                <Form.Item name="distanceToDowntown">
                   <Radio.Group
                     className="pt-2"
                     options={[
                       {
-                        label: "~0.5",
-                        value: "1",
+                        label: "~1",
+                        value: 1,
                       },
                       {
-                        label: "~1.5",
-                        value: "2",
+                        label: "~3",
+                        value: 3,
                       },
                       {
-                        label: "~2.5",
-                        value: "3",
+                        label: "~5",
+                        value: 5,
                       },
                       {
-                        label: "3+",
-                        value: "4",
+                        label: "7+",
+                        value: 100,
                       },
                     ]}
                     optionType="button"
@@ -198,17 +285,17 @@ export default function Nav() {
               </div>
               <div className="col-span-1">
                 <p className="text-[#008cc7] font-semibold">Талбай</p>
-                <Form.Item className="pt-2">
+                <Form.Item className="pt-2" name="maxBaseArea">
                   <InputNumber placeholder="Дээд талбай" addonAfter="м.кв" />
                 </Form.Item>
-                <Form.Item className="-mt-3">
+                <Form.Item className="-mt-3" name="minBaseArea">
                   <InputNumber placeholder="Доод талбай" addonAfter="м.кв" />
                 </Form.Item>
                 <p className="text-[#008cc7] font-semibold">Үнэ</p>
-                <Form.Item className="pt-2">
+                <Form.Item className="pt-2" name="maxTotalAvgPrice">
                   <InputNumber placeholder="Дээд үнэ" addonAfter="₮" />
                 </Form.Item>
-                <Form.Item className="-mt-3">
+                <Form.Item className="-mt-3" name="minTotalAvgPrice">
                   <InputNumber placeholder="Доод үнэ" addonAfter="₮" />
                 </Form.Item>
               </div>

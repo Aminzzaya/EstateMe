@@ -194,53 +194,6 @@ export default function Settings() {
                   </div>
                 </div>
               </div>
-              {/* <div className="inline-flex flex-col">
-                <div className="page-content-sm mt-6 p-4 px-6">
-                  <div className="grid grid-cols-6 gap-7">
-                    <div className="col-span-2">
-                      <p>Ажилтны код:</p>
-                    </div>
-                    <div className="col-span-4">
-                      <p>{user.employeeId}</p>
-                    </div>
-                  </div>
-                  <div className="border-b border-1 pt-4"></div>
-                  <div className="grid grid-cols-6 gap-7 pt-4">
-                    <div className="col-span-2">
-                      <p>И-мейл:</p>
-                    </div>
-                    <div className="col-span-4">
-                      <p>{user.email}</p>
-                    </div>
-                  </div>
-                  <div className="border-b border-1 pt-4"></div>
-                  <div className="grid grid-cols-6 gap-7 pt-4">
-                    <div className="col-span-2">
-                      <p>Утасны дугаар:</p>
-                    </div>
-                    <div className="col-span-4">
-                      <p>{user.phoneNumber}</p>
-                    </div>
-                  </div>
-                  <div className="border-b border-1 pt-4"></div>
-                  <div className="grid grid-cols-6 gap-7 pt-4">
-                    <div className="col-span-2">
-                      <p>Нууц үг:</p>
-                    </div>
-                    <div className="col-span-4 -mt-1">
-                      <Input.Password value={user.password} />
-                    </div>
-                  </div>
-                </div>
-                <div className="pt-6 justify-center flex">
-                  <Button
-                    className="bg-[#008cc7] border-none text-white"
-                    onClick={() => setEditModalOpen(true)}
-                  >
-                    Мэдээлэл засах
-                  </Button>
-                </div>
-              </div> */}
               <div className="pb-1 pt-6">
                 <Table
                   dataSource={users}

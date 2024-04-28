@@ -190,7 +190,6 @@ export default function Dashboard() {
     {
       title: "ҮХХ-ийн дугаар",
       dataIndex: "propertyId",
-      defaultSortOrder: "descend",
       width: 115,
       sorter: (a, b) => {
         const idA = parseInt(a.propertyId.substr(2), 10);
