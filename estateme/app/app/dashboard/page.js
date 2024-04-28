@@ -174,15 +174,24 @@ export default function Dashboard() {
 
   const columns = [
     {
+      title: "№",
+      dataIndex: "index",
+      width: 40,
+      render: (_, record, index) => (
+        <span className="font-medium">{index + 1}</span>
+      ),
+    },
+    {
       title: "Эзэмшигч",
       dataIndex: "ownerName",
-      width: 130,
+      width: 120,
       sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt),
     },
     {
       title: "ҮХХ-ийн дугаар",
       dataIndex: "propertyId",
-      width: 120,
+      defaultSortOrder: "descend",
+      width: 115,
       sorter: (a, b) => {
         const idA = parseInt(a.propertyId.substr(2), 10);
         const idB = parseInt(b.propertyId.substr(2), 10);
@@ -199,7 +208,7 @@ export default function Dashboard() {
       title: "Төрөл",
       dataIndex: "typeName",
       sorter: (a, b) => a.typeId - b.typeId,
-      width: 120,
+      width: 115,
     },
 
     {
@@ -212,7 +221,7 @@ export default function Dashboard() {
       title: "Төлөв",
       dataIndex: "statusName",
       sorter: (a, b) => a.statusId - b.statusId,
-      width: 160,
+      width: 140,
       render: (statusName) => (
         <div
           className={`status-cell text-center ${getStatusColor(statusName)}`}

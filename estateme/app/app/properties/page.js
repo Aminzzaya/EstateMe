@@ -224,14 +224,17 @@ export default function Dashboard() {
               </p>
               <Nav />
             </div>
-            <div>
-              <div>
+            <div className="flex flex-wrap">
+              <div className="w-1/2">
                 <Button
                   className="border-[#008cc7] text-[#008cc7]"
                   onClick={handleNewProperty}
                 >
                   + Үл хөдлөх хөрөнгө бүртгэх
                 </Button>
+              </div>
+              <div className="w-1/2 self-end text-right pr-12">
+                <p>Нийт үл хөдлөх хөрөнгө: {properties.length}</p>
               </div>
             </div>
             <div className="pt-6"></div>

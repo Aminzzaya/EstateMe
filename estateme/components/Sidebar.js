@@ -82,8 +82,8 @@ export default function Sidebar() {
           </div>
           <div className="pt-4">
             <p className="text-[#008cc7]">Тавтай морил</p>
-            <div className="leading-4 pt-3 font-medium">
-              <p>{user.firstName}</p>
+            <div className="leading-4 pt-3">
+              <p className="font-semibold">{user.firstName}</p>
               <p>{user.lastName}</p>
             </div>
           </div>
@@ -174,7 +174,7 @@ export default function Sidebar() {
             </div>
           </div>
           <div
-            className="pt-2 cursor-pointer hover:font-medium flex justify-center items-center gap-2 text-[#6f6f6f]"
+            className="pt-10 cursor-pointer hover:font-medium flex justify-center items-center gap-2 text-[#6f6f6f]"
             onClick={handleSignOut}
           >
             <SignOutIcon />
