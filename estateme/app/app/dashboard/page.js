@@ -418,7 +418,7 @@ export default function Dashboard() {
               columns={columns}
               locale={customLocale}
               pagination={false}
-              scroll={{ y: 280 }}
+              scroll={{ y: 360 }}
               dataSource={properties.map((property, index) => ({
                 ...property,
                 key: index,
