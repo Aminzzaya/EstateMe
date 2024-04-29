@@ -1,10 +1,10 @@
-import connectMongo from "@/server/mongodb";
+import connectMongo from "@/server/mongodb"; // MongoDB-тэй холбогдох функцийг импортлох
 import { NextResponse } from "next/server";
 import Property from "@/model/property";
 
 export async function POST(req) {
   try {
-    const {
+    const {         // Үл хөдлөх хөрөнгийн мэдээллийг авах
       propertyId,
       employeeId,
       typeId,
@@ -55,8 +55,9 @@ export async function POST(req) {
       otherInfo,
     } = await req.json();
 
-    await connectMongo();
-    await Property.create({
+    await connectMongo();       // MongoDB-тэй холбогдох
+
+    await Property.create({     // Шинэ үл хөдлөх хөрөнгийн мэдээллийг үүсгэх
       propertyId,
       employeeId,
       typeId,
