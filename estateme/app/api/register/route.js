@@ -1,6 +1,7 @@
 import connectMongo from "@/server/mongodb";
 import { NextResponse } from "next/server";
 import Employees from "@/model/employees";
+import Notifications from "@/model/notifications";
 
 export async function POST(req) {
   try {
@@ -28,6 +29,19 @@ export async function POST(req) {
       email,
       status,
     });
+
+    const notification = new Notifications({
+      recipients: ["ADMIN"],
+      type: "Шинээр бүртгэсэн",
+      sender: "ADMIN",
+      status: 0,
+      body: `${firstName} ${lastName.slice(
+        0,
+        1
+      )}. ажилтныг системд шинээр бүртгэлээ.`,
+    });
+
+    await notification.save();
 
     return NextResponse.json(
       { message: "Хэрэглэгч амжилттай бүртгэлээ" },

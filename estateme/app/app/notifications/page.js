@@ -72,7 +72,6 @@ export default function Dashboard() {
       }
     } catch (error) {
       console.error("Error marking notification as read:", error);
-      message.error("An error occurred while marking notification as read");
     }
   };
 

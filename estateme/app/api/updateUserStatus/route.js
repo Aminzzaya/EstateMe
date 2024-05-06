@@ -1,6 +1,7 @@
 import connectMongo from "@/server/mongodb";
 import { NextResponse } from "next/server";
 import Employees from "@/model/employees";
+import Notifications from "@/model/notifications";
 
 export async function POST(req) {
   try {
@@ -19,6 +20,22 @@ export async function POST(req) {
       },
       { new: true }
     );
+
+    const firstName = updatedEmployee.firstName;
+    const lastName = updatedEmployee.lastName;
+
+    const notification = new Notifications({
+      recipients: ["ADMIN"],
+      type: "Төлөв шинэчилсэн",
+      sender: "ADMIN",
+      status: 0,
+      body: `${firstName} ${lastName.slice(
+        0,
+        1
+      )}. ажилтны төлөв ${status} болж шинэчлэгдлээ.`,
+    });
+
+    await notification.save();
 
     if (!updatedEmployee) {
       return NextResponse.json(
