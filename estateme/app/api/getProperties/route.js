@@ -1,22 +1,22 @@
-import connectMongo from "@/server/mongodb";
+import connectMongo from "@/server/mongodb";  // MongoDB-тэй холбогдох функцийг импортлох
 import { NextResponse } from "next/server";
 import Property from "@/model/property";
 
 export async function GET() {
   try {
-    await connectMongo();
+    await connectMongo();       // MongoDB-тэй холбогдох
 
     const properties = await Property.aggregate([
       {
-        $lookup: {
-          from: "propertyType",
+        $lookup: {                    // Өгөгдлийг холбох (select, join)
+          from: "propertyType",     
           localField: "typeId",
           foreignField: "typeId",
           as: "typeName",
         },
       },
       {
-        $unwind: "$typeName",
+        $unwind: "$typeName",         // Талбар
       },
       {
         $lookup: {
