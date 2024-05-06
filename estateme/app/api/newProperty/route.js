@@ -1,6 +1,7 @@
 import connectMongo from "@/server/mongodb";
 import { NextResponse } from "next/server";
 import Property from "@/model/property";
+import Notifications from "@/model/notifications";
 
 export async function POST(req) {
   try {
@@ -106,6 +107,17 @@ export async function POST(req) {
       pics,
       otherInfo,
     });
+
+    const notification = new Notifications({
+      recipients: ["ADMIN", employeeId],
+      type: "Шинээр бүртгэсэн",
+      sender: employeeId,
+      propertyId,
+      status: 0,
+      body: `${propertyId} дугаартай үл хөдлөх хөрөнгө шинээр бүртгэгдлээ.`,
+    });
+
+    await notification.save();
 
     return NextResponse.json(
       { message: "Үл хөдлөх хөрөнгө амжилттай бүртгэлээ" },

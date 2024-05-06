@@ -99,6 +99,7 @@ export default function Dashboard() {
         },
         body: JSON.stringify({
           propertyId,
+          employeeId,
           statusId: formData.statusName,
           unitAvgPrice: formData.unitAvgPrice,
           totalAvgPrice: formData.totalAvgPrice,
@@ -133,7 +134,7 @@ export default function Dashboard() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ propertyId }),
+        body: JSON.stringify({ propertyId, employeeId }),
       });
       if (response.ok) {
         message.success("Амжилттай устгалаа!");

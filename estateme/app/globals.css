@@ -150,3 +150,7 @@ div {
     top: 0;
   }
 }
+
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-item-group-title {
+  color: #008cc7;
+}
